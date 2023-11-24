@@ -1,6 +1,6 @@
 databases:
-  - name: TeamCrm
-    databaseName: TeamCrm
+  - name: team_crm
+    databaseName: team_crm
     user: crm
 
 services:
