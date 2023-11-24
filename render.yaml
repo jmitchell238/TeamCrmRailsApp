@@ -2,6 +2,7 @@ databases:
   - name: team_crm
     databaseName: team_crm
     user: crm
+    plan: free
 
 services:
   - type: web
