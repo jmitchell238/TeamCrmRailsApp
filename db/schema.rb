@@ -10,8 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_24_040139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "tracks", force: :cascade do |t|
+    t.string "track_name"
+    t.string "track_type"
+    t.string "track_description"
+    t.string "track_time_of_day"
+    t.string "track_pack"
+    t.string "track_image_uri"
+    t.string "track_video_preview_uri"
+    t.string "track_weather"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "track_map_uri"
+  end
 
 end

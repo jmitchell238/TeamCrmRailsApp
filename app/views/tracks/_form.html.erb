@@ -1,0 +1,86 @@
+<!-- app/views/tracks/_form.html.erb -->
+
+<!-- app/views/tracks/_form.html.erb -->
+
+<%= form_with model: track, url: track.persisted? ? track_path(track) : tracks_path, method: track.persisted? ? :patch : :post do |form| %>
+  <div class="mb-4 w-full">
+    <%= form.label :track_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_name, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_type, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_type, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_description, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_description, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_time_of_day, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_time_of_day, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_pack, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_pack, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_image_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_image_uri, class: 'w-full border p-2 rounded', id: 'image-url' %>
+  </div>
+
+  <!-- Preview Image -->
+  <div class="mb-4" id="image-preview">
+    <% if track.persisted? && track.track_image_uri.present? %>
+      <%= image_tag track.track_image_uri, class: 'w-full h-auto object-contain', style: 'max-width: 300px;' %>
+    <% end %>
+  </div>
+
+  <!-- Preview Button -->
+  <div class="mb-4">
+    <button type="button" id="preview-button" class="bg-gray-300 text-gray-700 py-2 px-4 rounded">Preview</button>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_map_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_map_uri, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_video_preview_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_video_preview_uri, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :track_weather, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%= form.text_field :track_weather, class: 'w-full border p-2 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.submit track.persisted? ? 'Update Track' : 'Add Track', class: 'bg-blue-500 text-white py-2 px-4 rounded' %>
+  </div>
+
+  <div class="mb-4">
+    <%= link_to 'Delete', track_path(@track), data: {
+        turbo_method: :delete,
+        turbo_confirm: "Are you sure?"},
+    class: 'text-red-500 underline' %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    const imageUrlInput = document.getElementById('image-url');
+    const imagePreview = document.getElementById('image-preview');
+    const previewButton = document.getElementById('preview-button');
+
+    previewButton.addEventListener('click', function() {
+      const imageUrl = imageUrlInput.value;
+      imagePreview.innerHTML = `<img src="${imageUrl}" alt="Image Preview" class="w-full h-auto object-contain" style="max-width: 300px;" />`;
+    });
+  });
+</script>

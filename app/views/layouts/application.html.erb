@@ -12,9 +12,10 @@
 
   <body>
     <div>
-      <a href="https://render.com">     
-        <%= image_tag 'render.png', class: 'w-full' %>    
-      </a>  
+      <%= link_to root_path do %>     
+        <%= image_tag 'team_crm_banner.png', class: 'w-full' %> 
+        <%= render 'shared/navbar' %>   
+      <% end %> 
     </div>
     <%= yield %>
   </body>

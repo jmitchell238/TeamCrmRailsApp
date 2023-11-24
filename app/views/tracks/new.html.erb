@@ -1,0 +1,60 @@
+<div class="flex justify-center items-center h-full">
+
+    <%= form_with model: @track, url: tracks_path, method: :post, html: { class: 'w-full max-w-md p-4 bg-white' } do |form| %>
+  
+    <h1 class="text-2xl mb-4">Add a Track</h1>
+
+
+      <div class="mb-4">
+        <%= form.label :track_name %>
+        <%= form.text_field :track_name, class: 'w-full border p-2 rounded' %>
+      </div>
+
+        <div class="mb-4">
+            <%= form.label :track_type %>
+            <%= form.text_field :track_type, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_description %>
+            <%= form.text_field :track_description, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_time_of_day %>
+            <%= form.text_field :track_time_of_day, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_pack %>
+            <%= form.text_field :track_pack, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_image_uri %>
+            <%= form.text_field :track_image_uri, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_map_uri %>
+            <%= form.text_field :track_map_uri, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_video_preview_uri %>
+            <%= form.text_field :track_video_preview_uri, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+            <%= form.label :track_weather %>
+            <%= form.text_field :track_weather, class: 'w-full border p-2 rounded' %>
+        </div>
+  
+      <!-- Add other fields as needed -->
+  
+      <div class="text-center">
+        <%= form.submit 'Add Track', class: 'bg-blue-500 text-white py-2 px-4 rounded' %>
+      </div>
+    <% end %>
+  </div>
+  
