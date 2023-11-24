@@ -19,7 +19,6 @@ default: &default
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   # username: james_mitchell
-  # password: Personal-238
   # host: localhost
 
 
@@ -33,9 +32,6 @@ development:
   # When left blank, PostgreSQL will use the default role. This is
   # the same name as the operating system user running Rails.
   username: crm
-
-  # The password associated with the PostgreSQL role (username).
-  password: Personal-238
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -84,6 +80,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: crm_production
   username: crm
   password: <%= ENV["CRM_DATABASE_PASSWORD"] %>
