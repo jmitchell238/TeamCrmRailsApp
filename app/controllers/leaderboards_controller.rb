@@ -32,6 +32,29 @@ class LeaderboardsController < ApplicationController
 
   # Implement other actions (show, edit, update, destroy) as needed
 
+  def show
+    @leaderboard = Leaderboard.find(params[:id])
+  end
+
+  def edit
+    @leaderboard = Leaderboard.find(params[:id])
+  end
+
+  def update
+    @leaderboard = Leaderboard.find(params[:id])
+    if @leaderboard.update(leaderboard_params)
+      redirect_to @leaderboard
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    @leaderboard = Leaderboard.find(params[:id])
+    @leaderboard.destroy
+    redirect_to leaderboards_path
+  end
+
   private
 
   def set_leaderboard

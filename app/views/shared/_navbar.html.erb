@@ -14,8 +14,8 @@
       <li class="<%= current_page?(users_path) ? 'bg-red-500 p-4' : 'hover:bg-gray-700 p-4' %>">
         <%= link_to 'Members', users_path, class: 'block' %>
       </li>
-      <li class="<%= current_page?(leaderboard_path) ? 'bg-red-500 p-4' : 'hover:bg-gray-700 p-4' %>">
-        <%= link_to 'Leaderboard', leaderboard_path, class: 'block' %>
+      <li class="<%= current_page?(leaderboards_path) ? 'bg-red-500 p-4' : 'hover:bg-gray-700 p-4' %>">
+        <%= link_to 'Leaderboards', leaderboards_path, class: 'block' %>
       </li>
       <li class="<%= current_page?(tournaments_path) ? 'bg-red-500 p-4' : 'hover:bg-gray-700 p-4' %>">
         <%= link_to 'Tournaments', tournaments_path, class: 'block' %>

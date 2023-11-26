@@ -1,0 +1,46 @@
+<!-- app/views/leaderboards/index.html.erb -->
+
+<!-- Simple filters form -->
+<%= form_with url: leaderboards_path, method: :get, local: true do |form| %>
+  <%= form.label :track_type %>
+  <%= form.select :track_type, options_for_select(['Supercross', 'Motocross'], params[:track_type]) %>
+
+  <%= form.label :weather_condition %>
+  <%= form.text_field :weather_condition, value: params[:weather_condition] %>
+
+  <%= form.label :time_of_day %>
+  <%= form.text_field :time_of_day, value: params[:time_of_day] %>
+
+  <%= form.submit "Filter" %>
+<% end %>
+
+<!-- Leaderboard display -->
+<div>
+    <h1>
+        Leaderboards
+    </h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Track</th>
+                <th>Weather</th>
+                <th>Time of Day</th>
+                <th>Player</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @leaderboards.each do |leaderboard| %>
+                <tr>
+                    <td><%= leaderboard.track %></td>
+                    <td><%= leaderboard.weather_condition %></td>
+                    <td><%= leaderboard.time_of_day %></td>
+                    <td><%= leaderboard.player %></td>
+                    <td><%= leaderboard.time %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
