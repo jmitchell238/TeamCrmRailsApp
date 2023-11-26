@@ -1,5 +1,8 @@
 # app/models/track.rb
 class Track < ApplicationRecord
+    # Association with Races
+    has_many :races
+
     validates :track_name, presence: true
     validates :track_type, presence: true
     validates :track_description, presence: true
@@ -10,4 +13,3 @@ class Track < ApplicationRecord
     validates :track_video_preview_uri, presence: true
     validates :track_weather, presence: true
 end
-  

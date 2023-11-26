@@ -1,4 +1,12 @@
 class User < ApplicationRecord
+    # User has many registrations for different tournaments
+    has_many :user_registrations, dependent: :destroy
+    has_many :tournaments, through: :user_registrations
+
+    # User has many race participations through their registrations
+    has_many :race_participations, through: :user_registrations
+    has_many :races, through: :race_participations
+
     attribute :roles, :string, array: true, default: []
 
     has_secure_password
