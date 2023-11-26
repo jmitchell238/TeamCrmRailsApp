@@ -25,22 +25,20 @@
             </div>
 
             <div class="mb-4 w-full">
-            <%= form.label :roles, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+                <%= form.label :roles, class: 'block text-gray-700 text-sm font-bold mb-2' %>
 
-            <%= form.check_box :roles, { multiple: true }, 'member', nil %>
-            <%= form.label :roles, 'Member' %>
+                <%= form.check_box :roles, { multiple: true }, 'member', nil %>
+                <%= form.label :roles, 'Member' %>
 
-            <%= form.check_box :roles, { multiple: true }, 'owner', nil %>
-            <%= form.label :roles, 'Owner' %>
+                <%= form.check_box :roles, { multiple: true }, 'owner', nil %>
+                <%= form.label :roles, 'Owner' %>
 
-            <%= form.check_box :roles, { multiple: true }, 'manager', nil %>
-            <%= form.label :roles, 'Manager' %>
+                <%= form.check_box :roles, { multiple: true }, 'manager', nil %>
+                <%= form.label :roles, 'Manager' %>
 
-            <%= form.check_box :roles, { multiple: true }, 'admin', nil %>
-            <%= form.label :roles, 'Admin' %>
+                <%= form.check_box :roles, { multiple: true }, 'admin', nil %>
+                <%= form.label :roles, 'Admin' %>
             </div>
-
-
 
             <div class="py-2">
                 <%= form.submit "Update Profile", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>

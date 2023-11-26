@@ -10,12 +10,22 @@
         <div class="font-bold mb-2 text-xl">🗺️ <%= track.track_name %></div>
           <div><strong>Type:</strong> <%= track.track_type %></div>
           <div><strong>Description:</strong> <%= track.track_description %></div>
-          <div><strong>Time of Day:</strong> <%= track.track_time_of_day %></div>
+          <div>
+            <strong>Weather Conditions:</strong>
+            <% track.track_weather_conditions.each do |weather_condition| %>
+              <%= weather_condition %>
+            <% end %>
+          </div>
+          <div>
+            <strong>Times of Day:</strong>
+            <% track.track_times_of_day.each do |time_of_day| %>
+              <%= time_of_day %>
+            <% end %>
+          </div>
           <div><strong>Pack:</strong> <%= track.track_pack %></div>
           <div class="italic"><strong>Image:</strong> <%= track.track_image_uri %></div>
           <div class="italic"><strong>Map:</strong> <%= track.track_map_uri %></div>
           <div class="italic"><strong>Video Preview:</strong> <%= track.track_video_preview_uri %></div>
-          <div><strong>Weather:</strong> <%= track.track_weather %></div>
       
           <div class="flex justify-between mt-4">
             <div class="w-1/3">

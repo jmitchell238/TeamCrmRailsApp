@@ -9,11 +9,21 @@
           
             <p><strong>Type:</strong> <%= @track.track_type %></p>
             <p><strong>Description:</strong> <%= @track.track_description %></p>
-            <p><strong>Time of Day:</strong> <%= @track.track_time_of_day %></p>
+            <p>
+                <strong>Times of Day:</strong>
+                <% @track.track_times_of_day.each do |time_of_day| %>
+                    <%= time_of_day %>
+                <% end %>
+            </p>
+            <p>
+                <strong>Weather Conditions:</strong>
+                <% @track.track_weather_conditions.each do |weather_condition| %>
+                    <%= weather_condition %>
+                <% end %>
+            </p>
             <p><strong>Pack:</strong> <%= @track.track_pack %></p>
             <p><strong>Map:</strong> <%= @track.track_map_uri %></p>
             <p><strong>Video Preview:</strong> <%= @track.track_video_preview_uri %></p>
-            <p><strong>Weather:</strong> <%= @track.track_weather %></p>
             
             <div class="flex justify-between mt-4">
                 <% if policy(@track).update? %>

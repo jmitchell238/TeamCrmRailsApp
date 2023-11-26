@@ -1,10 +1,11 @@
 class Leaderboard < ApplicationRecord
   # Associations
   belongs_to :track
-  belongs_to :user
+  belongs_to :user, optional: true
 
   # Validations
-  validates :lap_time, presence: true, numericality: { greater_than: 0 }
+  validates :lap_time, :weather_condition, :time_of_day, presence: true
+  validates :lap_time, numericality: { greater_than: 0 }, allow_nil: true
   validates :user_id, uniqueness: { scope: [:track_id, :weather_condition, :time_of_day] }
   validates :weather_condition, presence: true
   validates :time_of_day, presence: true

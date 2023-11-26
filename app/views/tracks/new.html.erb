@@ -21,8 +21,8 @@
         </div>
 
         <div class="mb-4">
-            <%= form.label :track_time_of_day %>
-            <%= form.text_field :track_time_of_day, class: 'w-full border p-2 rounded' %>
+            <%= form.label :track_times_of_day %>
+            <%= form.collection_select :track_times_of_day, Track.times_of_day_options, :to_s, :to_s, {}, { multiple: true, size: 5 } %>
         </div>
 
         <div class="mb-4">
@@ -46,8 +46,8 @@
         </div>
 
         <div class="mb-4">
-            <%= form.label :track_weather %>
-            <%= form.text_field :track_weather, class: 'w-full border p-2 rounded' %>
+            <%= form.label :track_weather_conditions %>
+            <%= form.collection_select :track_weather_conditions, Track.weather_conditions_options, :to_s, :to_s, {}, { multiple: true, size: 5 } %>
         </div>
   
       <!-- Add other fields as needed -->
