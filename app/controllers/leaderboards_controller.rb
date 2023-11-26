@@ -5,7 +5,7 @@ class LeaderboardsController < ApplicationController
   # GET /leaderboards
   def index
     # You can filter leaderboards by track type, weather, and time of day using query parameters
-    @leaderboards = Leaderboard.includes(:track).order('tracks.track_type', :lap_time)
+    @leaderboards = Leaderboard.includes(:track).order('tracks.track_type')
 
     if params[:track_type].present?
       @leaderboards = @leaderboards.joins(:track).where('tracks.track_type = ?', params[:track_type])
@@ -20,23 +20,23 @@ class LeaderboardsController < ApplicationController
     end
   end
 
-# GET /tracks/:track_id/leaderboards/new
-def new
-  @leaderboard = Leaderboard.new
-end
-
-# POST /tracks/:track_id/leaderboards
-def create
-  @leaderboard = @track.leaderboards.build(leaderboard_params.merge(user: current_user))
-  if @leaderboard.save
-    redirect_to track_leaderboards_path(@track), notice: "Lap time successfully submitted."
-  else
-    render :new
+  # GET /tracks/:track_id/leaderboards/new
+  def new
+    @leaderboard = Leaderboard.new
   end
-end
+
+  # POST /tracks/:track_id/leaderboards
+  def create
+    @leaderboard = Leaderboard.new(leaderboard_params)
+    if @leaderboard.save
+      redirect_to track_leaderboards_path(@track), notice: "Leaderboard successfully created."
+    else
+      render :new
+    end
+  end
 
   # Implement other actions (show, edit, update, destroy) as needed
-
+  # GET /tracks/:track_id/leaderboards/:id
   def show
     @leaderboard = Leaderboard.find(params[:id])
   end
@@ -71,6 +71,6 @@ end
   end
 
   def leaderboard_params
-    params.require(:leaderboard).permit(:weather_condition, :time_of_day, :lap_time)
+    params.require(:leaderboard).permit(:weather_condition, :time_of_day, :track_id)
   end
 end

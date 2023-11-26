@@ -35,7 +35,7 @@ class TracksController < ApplicationController
         @track = Track.find(params[:id])
         authorize @track
         if @track.update(track_params)
-          redirect_to tracks_path, notice: 'Track was successfully updated.'
+          redirect_to track_path(@track), notice: 'Track was successfully updated.'
         else
           render :edit
         end
@@ -60,12 +60,12 @@ private
         :track_name,
         :track_type,
         :track_description,
-        :track_time_of_day,
         :track_pack,
         :track_image_uri,
         :track_map_uri,
         :track_video_preview_uri,
-        :track_weather
+        track_times_of_day: [],
+        track_weather_conditions: []
         )
     end
 end

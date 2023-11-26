@@ -19,11 +19,6 @@
   </div>
 
   <div class="mb-4">
-    <%= form.label :track_time_of_day, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-    <%= form.text_field :track_time_of_day, class: 'w-full border p-2 rounded' %>
-  </div>
-
-  <div class="mb-4">
     <%= form.label :track_pack, class: 'block text-gray-700 text-sm font-bold mb-2' %>
     <%= form.text_field :track_pack, class: 'w-full border p-2 rounded' %>
   </div>
@@ -56,16 +51,33 @@
   </div>
 
   <div class="mb-4">
-    <%= form.label :track_times_of_day, "Selectable Weather Conditions", class: 'block text-gray-700 text-sm font-bold mb-2' %>
-    
-    <%= form.collection_select :track_times_of_day, Track.times_of_day_options, :to_s, :to_s, {}, { multiple: true, size: 5 } %>
-
-  <div class="mb-4">
-    <%= form.label :track_weather, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-
-    <%= form.collection_select :track_weather_conditions, Track.weather_conditions_options, :to_s, :to_s, {}, { multiple: true, size: 5 } %>
+    <label class="block text-gray-700 text-sm font-bold mb-2">
+      Selectable Times of Day
+    </label>
+    <% Track.times_of_day_options.each do |option| %>
+      <label class="inline-flex items-center">
+        <%= check_box_tag 'track[track_times_of_day][]', option, track.track_times_of_day.include?(option), id: dom_id(track, :track_times_of_day_option), class: "form-checkbox text-blue-600" %>
+        <span class="ml-2">
+          <%= label_tag dom_id(track, :track_times_of_day_option), option.capitalize %>
+        </span>
+      </label>
+    <% end %>
   </div>
 
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2">
+      Selectable Weather Conditions
+    </label>
+    <% Track.weather_conditions_options.each do |option| %>
+      <label class="inline-flex items-center">
+        <%= check_box_tag 'track[track_weather_conditions][]', option, track.track_weather_conditions.include?(option), id: dom_id(track, :track_weather_conditions_option), class: "form-checkbox text-blue-600" %>
+        <span class="ml-2">
+          <%= label_tag dom_id(track, :track_weather_conditions_option), option.capitalize %>
+        </span>
+      </label>
+    <% end %>
+  </div>
+  
   <div class="mb-4">
     <%= form.submit track.persisted? ? 'Update Track' : 'Add Track', class: 'bg-blue-500 text-white py-2 px-4 rounded' %>
   </div>

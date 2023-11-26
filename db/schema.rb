@@ -10,21 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_26_102710) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_26_131610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "leaderboards", force: :cascade do |t|
-    t.bigint "track_id", null: false
+  create_table "lap_times", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "weather_condition"
-    t.string "time_of_day"
-    t.decimal "lap_time", null: false
+    t.bigint "leaderboard_id", null: false
+    t.decimal "lap_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["track_id", "user_id", "weather_condition", "time_of_day"], name: "index_leaderboards_on_track_and_conditions", unique: true
+    t.index ["leaderboard_id"], name: "index_lap_times_on_leaderboard_id"
+    t.index ["user_id"], name: "index_lap_times_on_user_id"
+  end
+
+  create_table "leaderboards", force: :cascade do |t|
+    t.bigint "track_id", null: false
+    t.string "weather_condition"
+    t.string "time_of_day"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["track_id"], name: "index_leaderboards_on_track_id"
-    t.index ["user_id"], name: "index_leaderboards_on_user_id"
   end
 
   create_table "race_participations", force: :cascade do |t|
@@ -110,8 +116,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_26_102710) do
     t.string "roles", default: [], array: true
   end
 
+  add_foreign_key "lap_times", "leaderboards"
+  add_foreign_key "lap_times", "users"
   add_foreign_key "leaderboards", "tracks"
-  add_foreign_key "leaderboards", "users"
   add_foreign_key "race_participations", "races"
   add_foreign_key "race_participations", "user_registrations"
   add_foreign_key "races", "rounds"

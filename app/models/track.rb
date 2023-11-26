@@ -2,6 +2,8 @@
 class Track < ApplicationRecord
     # Association with Races
     has_many :races
+    has_many :leaderboards, dependent: :destroy # Assuming you have a Leaderboard model
+    belongs_to :user, optional: true
 
     validates :track_name, presence: true
     validates :track_type, presence: true
@@ -31,12 +33,13 @@ class Track < ApplicationRecord
         track_times_of_day.each do |time|
           track_weather_conditions.each do |weather|
             leaderboards.create!(
+              track_id: id,
               weather_condition: weather,
               time_of_day: time
               # User and lap_time are not assigned here; they will be populated when a user submits a time.
             )
           end
         end
-      end
+    end
 
 end
