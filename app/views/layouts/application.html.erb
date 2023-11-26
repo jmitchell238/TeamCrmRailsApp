@@ -11,12 +11,46 @@
   </head>
 
   <body>
+    <div id="notice" class="bg-green-500 text-white px-4 py-2 fixed w-full top-0 left-0 z-50 hidden">
+      <%= notice %>
+    </div>
+    <div id="alert" class="bg-red-500 text-white px-4 py-2 fixed w-full top-0 left-0 z-50 hidden">
+      <%= alert %>
+    </div>
+    
     <div>
       <%= link_to root_path do %>     
-        <%= image_tag 'team_crm_banner.png', class: 'w-full' %> 
-        <%= render 'shared/navbar' %>   
+        <%= image_tag 'team_crm_banner.png', class: 'w-full p-0 mb-[-1px] border-0 block' %> 
       <% end %> 
+      <%= render 'shared/navbar' %> 
     </div>
+
     <%= yield %>
+
+    <script>
+      document.addEventListener('turbo:load', function() {
+        var notice = document.getElementById('notice');
+        if (notice.textContent.trim() !== "") {
+          notice.classList.remove('hidden');
+
+          setTimeout(function() {
+            notice.classList.add('hidden');
+          }, 5000);
+        } else {
+          notice.classList.add('hidden');
+        }
+
+        var alert = document.getElementById('alert');
+        if (alert.textContent.trim() !== "") {
+          alert.classList.remove('hidden');
+
+          setTimeout(function() {
+            alert.classList.add('hidden');
+          }, 5000);
+        } else {
+          alert.classList.add('hidden');
+        }
+      });
+    </script>
   </body>
 </html>

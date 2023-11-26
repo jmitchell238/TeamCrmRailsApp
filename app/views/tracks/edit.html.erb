@@ -1,12 +1,23 @@
 <!-- app/views/tracks/edit.html.erb -->
 
+<%= render 'tracks/trackbreadcrumbs' %>
+
 <div class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="p-8 bg-white shadow-md rounded-md">
       <h1 class="font-bold text-2xl mb-4">Edit Track</h1>
   
       <%= render 'form', track: @track, class: "w-2xl" %>
   
-      <%= link_to 'Back', tracks_path, class: 'text-blue-500 underline' %>
+      <%= link_to 'Cancel', tracks_path, class: 'text-blue-500 underline' %>
+
+      <% if policy(@track).destroy? %>
+        <div class="mb-4">
+          <%= button_to 'Delete', track_path(@track), data: {
+              turbo_method: :delete,
+              turbo_confirm: "Are you sure?"},
+          class: 'text-red-500 underline' %>
+        </div>
+      <% end %>
     </div>
   </div>
   

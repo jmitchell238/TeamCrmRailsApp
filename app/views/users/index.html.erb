@@ -1,0 +1,65 @@
+<!-- app/views/users/index.html.erb -->
+
+<!-- Breadcrumbs -->
+<%= render 'users/breadcrumbs' %>
+
+<!-- Container for centering the card on the page -->
+<div class="flex items-center justify-center pt-8">
+    
+    <!-- Card styling -->
+    <div class="p-8 bg-white shadow-lg rounded-md border border-gray-300 max-w-lg w-full">
+        
+        <!-- Team Members Title -->
+        <h1 class="text-2xl font-bold underline text-gray-700 text-center pb-4">
+            Team Members
+        </h1>
+        
+        <!-- Subtitle -->
+        <p class="text-center text-gray-600 font-medium">
+            Full List of Team Members
+        </p>
+
+        <!-- Members List -->
+        <ul class="list-none p-6 text-center">
+            <li class="flex justify-center items-center mb-2">
+                <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                CRM_HankHill
+            </li>
+            <li class="flex justify-center items-center mb-2">
+                <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                CRM_Theft
+            </li>
+            <li class="flex justify-center items-center mb-2">
+                <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                CRM_Noxious
+            </li>
+            <li class="flex justify-center items-center mb-2">
+                <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                CRM_MadMax
+            </li>
+            <li class="flex justify-center items-center mb-2">
+                <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                CRM_JamesM
+            </li>
+            <li class="flex justify-center items-center">
+                <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                CRM_Void
+            </li>
+        </ul>
+
+        <!-- Subtitle for Members with an Account on this website -->
+        <p class="text-center text-gray-600 font-medium mt-8">
+            List of Members with an Account on the Website
+        </p>
+
+        <!-- Dynamic Members List -->
+        <ul class="text-lg p-6 text-center">
+            <% @users.each do |user| %>
+                <li class="flex justify-center items-center">
+                    <span class="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+                    <%= link_to user.gamer_tag, user_path(user), class: "text-blue-700 hover:text-blue-800 font-medium" %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</div>

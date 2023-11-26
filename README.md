@@ -9,3 +9,11 @@ Ruby: 3.2.2
 Rails: 7
 
 Postgresql DB
+
+### Start PostGresql
+
+- ``` sudo service postgresql restart ```
+
+### Start Rails dev server
+
+- ``` ./bin/dev ```

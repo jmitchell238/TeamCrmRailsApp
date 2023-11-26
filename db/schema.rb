@@ -10,9 +10,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_24_040139) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_26_082842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "race_participations", force: :cascade do |t|
+    t.bigint "user_registration_id", null: false
+    t.bigint "race_id", null: false
+    t.integer "position"
+    t.integer "points"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["race_id"], name: "index_race_participations_on_race_id"
+    t.index ["user_registration_id"], name: "index_race_participations_on_user_registration_id"
+  end
+
+  create_table "races", force: :cascade do |t|
+    t.bigint "round_id", null: false
+    t.string "race_type", null: false
+    t.string "main_category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["round_id"], name: "index_races_on_round_id"
+  end
+
+  create_table "rounds", force: :cascade do |t|
+    t.bigint "tournament_id", null: false
+    t.bigint "track_id", null: false
+    t.string "name"
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournament_id"], name: "index_rounds_on_tournament_id"
+    t.index ["track_id"], name: "index_rounds_on_track_id"
+  end
+
+  create_table "tournaments", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "start_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "tracks", force: :cascade do |t|
     t.string "track_name"
@@ -28,4 +67,43 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_24_040139) do
     t.string "track_map_uri"
   end
 
+  create_table "user_registrations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tournament_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournament_id"], name: "index_user_registrations_on_tournament_id"
+    t.index ["user_id", "tournament_id"], name: "index_user_registrations_on_user_id_and_tournament_id", unique: true
+    t.index ["user_id"], name: "index_user_registrations_on_user_id"
+  end
+
+  create_table "user_scores", force: :cascade do |t|
+    t.bigint "user_registration_id", null: false
+    t.bigint "round_id", null: false
+    t.integer "points", default: 0
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["round_id"], name: "index_user_scores_on_round_id"
+    t.index ["user_registration_id"], name: "index_user_scores_on_user_registration_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "gamer_tag"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "roles", default: [], array: true
+  end
+
+  add_foreign_key "race_participations", "races"
+  add_foreign_key "race_participations", "user_registrations"
+  add_foreign_key "races", "rounds"
+  add_foreign_key "rounds", "tournaments"
+  add_foreign_key "rounds", "tracks"
+  add_foreign_key "user_registrations", "tournaments"
+  add_foreign_key "user_registrations", "users"
+  add_foreign_key "user_scores", "rounds"
+  add_foreign_key "user_scores", "user_registrations"
 end

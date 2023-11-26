@@ -1,0 +1,26 @@
+<!-- app/views/sessions/new.html.erb -->
+<div class="flex items-center justify-center pt-8">
+    <div class="p-8 bg-white shadow-lg rounded-md outline outline-1 outline-gray-300">
+        <h1 class="text-2xl font-bold underline text-gray-700 text-center pb-4">Sign In</h1>
+
+        <%= form_with model: @user, url: session_path, class: '2-2xl' do |form| %>
+
+            <div class="mb-4 w-full">
+                <%= form.label :email, class: 'block text-gray-700 text-sm font-bold mb-2'  %>
+                <%= form.email_field :email, class: 'w-full border p-2 rounded' %>
+            </div>
+
+            <div class="mb-4 w-full">
+                <%= form.label :password, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+                <%= form.password_field :password, class: 'w-full border p-2 rounded' %>
+            </div>
+
+            <div>
+                <%= form.submit "Sign In", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
+            </div>
+
+        <% end %>
+
+        <%= link_to "Forgot Password?", new_password_reset_path %>
+    </div>
+</div>
