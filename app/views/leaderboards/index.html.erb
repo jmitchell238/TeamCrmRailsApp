@@ -1,46 +1,44 @@
 <!-- app/views/leaderboards/index.html.erb -->
 
-<!-- Simple filters form -->
-<%= form_with url: leaderboards_path, method: :get, local: true do |form| %>
-  <%= form.label :track_type %>
-  <%= form.select :track_type, options_for_select(['Supercross', 'Motocross'], params[:track_type]) %>
+<%= render 'leaderboards/leaderboards_breadcrumbs' %>
 
-  <%= form.label :weather_condition %>
-  <%= form.text_field :weather_condition, value: params[:weather_condition] %>
+<div class="flex flex-wrap justify-center">
+  <h1 class="font-bold text-2xl mb-4 w-full text-center">Leaderboards</h1>
 
-  <%= form.label :time_of_day %>
-  <%= form.text_field :time_of_day, value: params[:time_of_day] %>
+  <!-- Simple filters form -->
+  <div class="w-full mb-4 px-4">
+    <%= form_with url: leaderboards_path, method: :get, local: true, class: "flex space-x-2 justify-center" do |form| %>
+      <div class="flex items-center space-x-1">
+        <%= form.label :track_type, class: 'text-sm font-medium' %>
+        <%= form.select :track_type, options_for_select(['Supercross', 'Motocross'], params[:track_type]), {}, class: 'border-gray-300 rounded-md' %>
+      </div>
 
-  <%= form.submit "Filter" %>
-<% end %>
+      <div class="flex items-center space-x-1">
+        <%= form.label :weather_condition, class: 'text-sm font-medium' %>
+        <%= form.text_field :weather_condition, value: params[:weather_condition], class: 'border-gray-300 rounded-md' %>
+      </div>
 
-<!-- Leaderboard display -->
-<div>
-    <h1>
-        Leaderboards
-    </h1>
+      <div class="flex items-center space-x-1">
+        <%= form.label :time_of_day, class: 'text-sm font-medium' %>
+        <%= form.text_field :time_of_day, value: params[:time_of_day], class: 'border-gray-300 rounded-md' %>
+      </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Track</th>
-                <th>Weather</th>
-                <th>Time of Day</th>
-                <th>Player</th>
-                <th>Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @leaderboards.each do |leaderboard| %>
-                <tr>
-                    <td><%= leaderboard.track %></td>
-                    <td><%= leaderboard.weather_condition %></td>
-                    <td><%= leaderboard.time_of_day %></td>
-                    <td><%= leaderboard.player %></td>
-                    <td><%= leaderboard.time %></td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
+      <%= form.submit "Filter", class: "px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring" %>
+    <% end %>
+  </div>
+
+  <!-- Leaderboard display -->
+  <% if @leaderboards.present? %>
+    <% @leaderboards.each do |leaderboard| %>
+      <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 shadow border border-gray-200 bg-gray-100 mb-4 mx-2">
+        <div class="font-bold mb-2 text-xl">🏁 <%= leaderboard.track.track_name %></div>
+        <div><strong>Weather:</strong> <%= leaderboard.weather_condition %></div>
+        <div><strong>Time of Day:</strong> <%= leaderboard.time_of_day %></div>
+        <div><strong>Player:</strong> <%= leaderboard.user.gamer_tag %></div>
+        <div><strong>Time:</strong> <%= number_with_precision(leaderboard.lap_time, precision: 2) %> seconds</div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="w-full text-center">No leaderboard entries found.</p>
+  <% end %>
 </div>
-
