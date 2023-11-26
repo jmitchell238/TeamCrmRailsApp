@@ -1,5 +1,6 @@
 class LeaderboardsController < ApplicationController
   before_action :set_leaderboard, only: %i[show edit update destroy]
+  before_action :set_track, only: %i[new create]
 
   # GET /leaderboards
   def index
@@ -19,16 +20,20 @@ class LeaderboardsController < ApplicationController
     end
   end
 
-  # POST /tracks/:track_id/leaderboards
-  def create
-    @leaderboard = Leaderboard.new(leaderboard_params.merge(track_id: params[:track_id], user: current_user))
+# GET /tracks/:track_id/leaderboards/new
+def new
+  @leaderboard = Leaderboard.new
+end
 
-    if @leaderboard.save
-      redirect_to track_leaderboards_path(@leaderboard.track), notice: "Your lap time has been successfully submitted."
-    else
-      # Handle re-rendering the form with errors or providing feedback to the user.
-    end
+# POST /tracks/:track_id/leaderboards
+def create
+  @leaderboard = @track.leaderboards.build(leaderboard_params.merge(user: current_user))
+  if @leaderboard.save
+    redirect_to track_leaderboards_path(@track), notice: "Lap time successfully submitted."
+  else
+    render :new
   end
+end
 
   # Implement other actions (show, edit, update, destroy) as needed
 
@@ -59,6 +64,10 @@ class LeaderboardsController < ApplicationController
 
   def set_leaderboard
     @leaderboard = Leaderboard.find(params[:id])
+  end
+
+  def set_track
+    @track = Track.find(params[:track_id])
   end
 
   def leaderboard_params

@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   resources :race_participations
 
   resources :tracks do
-    resources :leaderboards, only: [:show, :create]
+    resources :leaderboards, only: [:new, :show, :create]
   end
 
   resources :leaderboards
