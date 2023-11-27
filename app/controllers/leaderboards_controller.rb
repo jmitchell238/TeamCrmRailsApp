@@ -40,7 +40,7 @@ class LeaderboardsController < ApplicationController
   # GET /leaderboards_by_track
   def leaderboards_by_track
     # Lookup and send back the leaderboards for the given track_id
-    @leaderboards = Leaderboard.where(track_id: params[:track_id])
+    @leaderboards = Leaderboard.where(track_name: params[:track_name])
 
     respond_to do |format|
       format.turbo_stream
@@ -112,10 +112,10 @@ class LeaderboardsController < ApplicationController
   end
 
   def track_params
-    params.permit(:track_type, :track_id, :track_condition)
+    params.permit(:track_type, :track_name, :track_id, :track_condition)
   end
 
   def leaderboard_params
-    params.permit(:track_id, :track_condition, :track_type)
+    params.permit(:track_id, :track_name, :track_condition, :track_type)
   end
 end

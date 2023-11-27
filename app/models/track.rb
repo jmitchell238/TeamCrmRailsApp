@@ -22,23 +22,23 @@ class Track < ApplicationRecord
 
     # Class method to provide options for Track Type
     def self.track_type_options
-        %w[Supercross National]
+        %w[supercross national]
     end
 
    # Class method to provide options for weather conditions
     def self.weather_conditions_options
-        %w[Clear Rain Wet]
+        %w[clear rain wet]
     end
 
     # Class method to provide options for times of day
     def self.times_of_day_options
-        %w[Morning Afternoon Night]
+        %w[morning afternoon night]
     end
 
-    # There aren't weather Condition options and time of day Options. There are just OPTIONS
-    # Options are Morning, Afternoon, Night, Rainy
+    # # There aren't weather Condition options and time of day Options. There are just OPTIONS
+    # # Options are Morning, Afternoon, Night, Rainy
     def self.track_conditions_options
-        %w[Morning Afternoon Night Rainy]
+        %w[morning afternoon night rainy]
     end
 
     private

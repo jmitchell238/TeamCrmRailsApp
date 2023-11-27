@@ -1,5 +1,4 @@
-<#% app/views/leaderboards/_leaderboards_by_track_type.turbo_stream.erb %>
 
-<%= turbo_stream.update 'track_name_select' do %>
-  <%= render partial: 'leaderboards/leaderboards_track_type_selections', locals: { leaderboards: @leaderboards } %>
+<%= turbo_stream.update 'leaderboards_by_track_name_select' do %>
+  <%= render partial: 'leaderboards/leaderboards_track_name_selections', locals: { leaderboards: @leaderboards } %>
 <% end %>
