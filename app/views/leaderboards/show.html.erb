@@ -2,3 +2,43 @@
 
 <%= render 'leaderboards/leaderboard_breadcrumbs' %>
 
+<div class="mx-auto max-w-2xl lg:max-w-4xl">
+    <h1 class="font-bold text-2xl mb-4 text-center"><%= @leaderboard.track.track_name %> - <%= @leaderboard.weather_condition %> - <%= @leaderboard.time_of_day %></h1>
+    <p class="w-full text-center mb-4">Lap Times</p>
+  
+    <!-- Leaderboard display -->
+    <div class="flex flex-col border border-gray-300 rounded-md overflow-hidden">
+      <!-- Header row -->
+      <div class="flex bg-gray-200 p-4 border-b border-gray-300">
+        <div class="w-1/5 text-left pl-4 font-semibold">Position</div>
+        <div class="w-2/5 text-left font-semibold">Lap Time</div>
+        <div class="w-2/5 text-left font-semibold">Gamer Tag</div>
+        <div class="w-1/5 text-center font-semibold"></div>
+      </div>
+  
+      <% if @leaderboard.lap_times.present? %>
+        <% @lap_times.each_with_index do |lap_time, index| %>
+          <div class="flex p-4 border-t border-gray-300 items-center">
+            <div class="w-1/5 text-left pl-4"><%= index + 1 %></div>
+            <div class="w-2/5 text-left">
+              <% if lap_time.lap_time.present? %>
+                <%= lap_time.formatted_lap_time %>
+              <% else %>
+                <span class="text-gray-500">No lap time recorded</span>
+              <% end %>
+            </div>
+            <div class="w-2/5 text-left"><%= lap_time.user.gamer_tag %></div>
+            <div class="w-1/5 text-center">
+                <% if policy(lap_time).destroy? %>
+                    <%= button_to 'Remove', track_leaderboard_lap_time_path(@leaderboard.track, @leaderboard, lap_time), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-500' %>
+                <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="p-4 text-center">No lap times found.</div>
+      <% end %>
+    </div>
+  
+    <%= link_to 'Add Lap Time', new_track_leaderboard_lap_time_path(@leaderboard.track, @leaderboard), class: "block mx-auto my-4 px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring float-right" %>
+  </div>

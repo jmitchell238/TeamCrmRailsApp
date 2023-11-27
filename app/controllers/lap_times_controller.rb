@@ -9,6 +9,8 @@ class LapTimesController < ApplicationController
 
   def new
     @lap_time = LapTime.new
+    @lap_time.user = current_user
+    @lap_time.leaderboard = @leaderboard
   end
 
   def show
@@ -29,26 +31,49 @@ class LapTimesController < ApplicationController
   end
 
   def create
-    user = User.find_by(id: params[:user_id])
-    leaderboard = Leaderboard.find_by(id: params[:leaderboard_id])
+    @lap_time = LapTime.new(lap_time_params)
 
-    lap_time = LapTime.create(user: user, leaderboard: leaderboard, lap_time: params[:lap_time])
-    redirect_to leaderboard_path(leaderboard)
+    if @lap_time.save
+      redirect_to leaderboard_path(@leaderboard), notice: "Lap time successfully created."
+    else
+      render :new
+    end
   end
 
   def destroy
-    lap_time = LapTime.find_by(id: params[:id])
-    lap_time.destroy
-    redirect_to leaderboard_path(lap_time.leaderboard)
+    begin
+      lap_time = LapTime.find(params[:id])
+
+      authorize lap_time
+
+      leaderboard = lap_time.leaderboard
+
+      puts "Before destruction: #{lap_time.inspect}"
+      lap_time.destroy
+      puts "After destruction: #{lap_time.inspect}"
+
+      redirect_to leaderboard_path(leaderboard), notice: "Lap time successfully deleted."
+    rescue Pundit::NotAuthorizedError
+      redirect_back(fallback_location: root_path, notice: "You are not authorized to do that.")
+    end
   end
+
 
   private
 
   def lap_time_params
-    params.require(:lap_time).permit(:lap_time, :user_id, :leaderboard_id)
+    params.require(:lap_time).permit(:user_id, :leaderboard_id, :lap_time)
   end
 
   def set_lap_time
     @lap_time = LapTime.find(params[:id])
+  end
+
+  def set_leaderboard
+    @leaderboard = Leaderboard.find(params[:leaderboard_id])
+  end
+
+  def set_track
+    @track = Track.find(params[:track_id])
   end
 end

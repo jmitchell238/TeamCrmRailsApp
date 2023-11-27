@@ -1,0 +1,88 @@
+<!-- app/views/lap_times/new.html.erb -->
+
+<%= render 'leaderboards/leaderboard_breadcrumbs' %>
+
+<div class="flex flex-wrap justify-center">
+  <h1 class="font-bold text-2xl mb-4 w-full text-center"><%= @leaderboard.track.track_name %> - <%= @leaderboard.weather_condition %> - <%= @leaderboard.time_of_day %></h1>
+  <p class="w-full text-center mb-4">Add Your Fast Lap Time</p>
+
+<!-- Lap Time form -->
+<div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 shadow border border-gray-200 bg-gray-100 mb-4 mx-2">
+    <%= form_with model: [@leaderboard.track, @leaderboard, @lap_time], local: true do |form| %>
+      <div class="mb-4">
+        <label for="user_id" class="text-sm font-medium">Gamer Tag</label>
+        <div class="flex items-center space-x-1">
+          <span class="font-semibold text-gray-800"><%= @lap_time.user.gamer_tag %></span>
+          <%= form.hidden_field :user_id, value: @lap_time.user.id %>
+        </div>
+      </div>
+  
+      <div class="mb-4">
+        <label for="leaderboard_id" class="text-sm font-medium">Track</label>
+        <div class="flex items-center space-x-1">
+          <span class="font-semibold text-gray-800">
+            <%= @leaderboard.track.track_name %> - <%= @leaderboard.weather_condition %> - <%= @leaderboard.time_of_day %>
+          </span>
+          <%= form.hidden_field :leaderboard_id, value: @lap_time.leaderboard.id %>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center text-sm">
+        <%= form.label :lap_time, 'Lap Time', class: 'font-medium mb-1' %>
+        <div class="flex flex-row space-x-1">
+          <%= form.select :minutes, options_for_select((0..59).map { |i| [format('%02d', i), i] }), { include_blank: 'MM' }, class: 'border-gray-300 rounded-md p-2', id: 'lap_time_minutes' %>
+          <span>:</span>
+          <%= form.select :seconds, options_for_select((0..59).map { |i| [format('%02d', i), i] }), { include_blank: 'ss' }, class: 'border-gray-300 rounded-md p-2', id: 'lap_time_seconds' %>
+          <span>:</span>
+          <%= form.select :milliseconds, options_for_select((0..99).map { |i| [format('%02d', i), i] }), { include_blank: 'mm' }, class: 'border-gray-300 rounded-md p-2', id: 'lap_time_milliseconds' %>
+          <%= form.hidden_field :lap_time, class: 'hidden', id: 'combined_lap_time' %>
+        </div>
+      </div>
+    
+      <%= form.submit "Add Lap Time", class: "px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring" %>
+    <% end %>
+  </div>
+  
+</div>
+
+  <script>
+    // Add JavaScript to handle input restrictions
+    document.addEventListener("turbo:load", function () {
+      const inputFields = document.querySelectorAll("input[type='text'][maxlength]");
+      
+      inputFields.forEach((field) => {
+        field.addEventListener("input", function () {
+          if (this.value.length > parseInt(this.getAttribute("maxlength"))) {
+            this.value = this.value.slice(0, this.getAttribute("maxlength"));
+          }
+        });
+      });
+    });
+  </script>
+
+<script>
+document.addEventListener("turbo:load", function() {
+  const minutesSelect = document.getElementById('lap_time_minutes');
+  const secondsSelect = document.getElementById('lap_time_seconds');
+  const millisecondsSelect = document.getElementById('lap_time_milliseconds');
+  const combinedLapTime = document.getElementById('combined_lap_time');
+
+  function updateCombinedLapTime() {
+    const minutes = minutesSelect.value.padStart(2, '0');
+    const seconds = secondsSelect.value.padStart(2, '0');
+    const milliseconds = millisecondsSelect.value.padStart(2, '0');
+
+    // Combine the values without punctuation
+    const combinedTime = `${minutes}${seconds}${milliseconds}`;
+    
+    // Store the combined time as an integer
+    combinedLapTime.value = parseInt(combinedTime, 10);
+  }
+
+  minutesSelect.addEventListener('change', updateCombinedLapTime);
+  secondsSelect.addEventListener('change', updateCombinedLapTime);
+  millisecondsSelect.addEventListener('change', updateCombinedLapTime);
+});
+    </script>
+  
+

@@ -27,6 +27,11 @@ class Track < ApplicationRecord
         ['Morning', 'Noon', 'Evening', 'Night']
     end
 
+    # Class method to provide options for Track Type
+    def self.track_type_options
+      ['Supercross', 'Motocross', 'Enduro', 'Freestyle', 'Other']
+    end
+
     private
 
     def create_leaderboards_for_conditions

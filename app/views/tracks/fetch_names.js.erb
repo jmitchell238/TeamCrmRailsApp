@@ -1,0 +1,4 @@
+// app/views/tracks/fetch_names.js.erb
+
+var trackDropdown = document.getElementById('track_id');
+trackDropdown.innerHTML = "<%= j render partial: 'tracks/track_options', locals: { tracks: @tracks } %>";

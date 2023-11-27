@@ -41,12 +41,19 @@ class TracksController < ApplicationController
         end
     end
 
-
     def destroy
         @track = Track.find(params[:id])
         @track.destroy
 
         redirect_to tracks_path, notice: 'Track was successfully deleted.'
+    end
+
+    def fetch_names(track_type)
+      @tracks = Track.find_by(track_type: params[track_type])
+
+      respond_to do |format|
+        format.js
+      end
     end
 
 private

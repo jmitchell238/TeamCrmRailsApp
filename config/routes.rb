@@ -44,7 +44,9 @@ Rails.application.routes.draw do
   resources :race_participations
 
   resources :tracks do
-    resources :leaderboards, only: [:new, :show, :create]
+    resources :leaderboards, only: [:new, :show, :create] do
+      resources :lap_times, only: [:new, :create, :destroy]
+    end
   end
 
   resources :leaderboards
@@ -52,4 +54,5 @@ Rails.application.routes.draw do
   # Additional custom routes
   get '/members', to: 'members#index'
   get '/leaderboard', to: 'leaderboard#index'
+  get '/tracks/fetch_names', to: 'tracks#fetch_names'
 end

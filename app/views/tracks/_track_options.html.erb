@@ -1,0 +1,5 @@
+<!-- app/views/tracks/_track_options.html.erb -->
+
+<% tracks.each do |track| %>
+  <option value="<%= track.id %>"><%= track.track_name %></option>
+<% end %>

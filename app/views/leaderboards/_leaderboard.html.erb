@@ -1,0 +1,17 @@
+<!-- app/views/leaderboards/_leaderboard.html.erb -->
+
+<!-- _leaderboard.html.erb -->
+
+<% if @leaderboards.present? %>
+  <% @leaderboards.each do |leaderboard| %>
+    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 shadow border border-gray-200 bg-gray-100 mb-4 mx-2">
+      <%= link_to track_leaderboard_path(leaderboard.track, leaderboard), class: "block font-bold mb-2 text-xl", method: :get do %>
+        🏁 <%= leaderboard.track.track_name %>
+      <% end %>
+      <div><strong>Weather:</strong> <%= leaderboard.weather_condition %></div>
+      <div><strong>Time of Day:</strong> <%= leaderboard.time_of_day %></div>
+    </div>
+  <% end %>
+<% else %>
+  <p class="w-full text-center">No leaderboard entries found.</p>
+<% end %>

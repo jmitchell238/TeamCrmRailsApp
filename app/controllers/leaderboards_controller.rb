@@ -4,11 +4,15 @@ class LeaderboardsController < ApplicationController
 
   # GET /leaderboards
   def index
-    # You can filter leaderboards by track type, weather, and time of day using query parameters
-    @leaderboards = Leaderboard.includes(:track).order('tracks.track_type')
+    @track_type_options = Track.track_type_options
+    @weather_conditions_options = Track.weather_conditions_options
+    @times_of_day_options = Track.times_of_day_options
+
+    # Start with all leaderboards and progressively filter them based on provided params
+    @leaderboards = Leaderboard.includes(:track)
 
     if params[:track_type].present?
-      @leaderboards = @leaderboards.joins(:track).where('tracks.track_type = ?', params[:track_type])
+      @leaderboards = @leaderboards.where(tracks: { track_type: params[:track_type] })
     end
 
     if params[:weather_condition].present?
@@ -17,6 +21,20 @@ class LeaderboardsController < ApplicationController
 
     if params[:time_of_day].present?
       @leaderboards = @leaderboards.where(time_of_day: params[:time_of_day])
+    end
+
+    # Initialize to nil or an empty ActiveRecord::Relation if no filters are applied
+    @leaderboards = @leaderboards.references(:track)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.js do
+        # On AJAX request, only update the necessary instance variables if needed
+        # For example, you may want to load tracks based on the selected track type
+        if params[:track_type].present?
+          @tracks = Track.where(track_type: params[:track_type])
+        end
+      end
     end
   end
 
@@ -39,6 +57,10 @@ class LeaderboardsController < ApplicationController
   # GET /tracks/:track_id/leaderboards/:id
   def show
     @leaderboard = Leaderboard.find(params[:id])
+
+    # @lap_times = @leaderboard.lap_times.order(lap_time: :asc) # THIS WORKS TO SHOW ALL LAP TIMES
+
+    @lap_times = @leaderboard.lap_times.select('DISTINCT ON (user_id) lap_times.*').order('user_id, lap_time ASC')
   end
 
   def edit

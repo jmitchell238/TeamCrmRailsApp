@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       @user = User.new(user_params)
 
       if @user.save
-        redirect_to users_path, notice: "User created."
+        redirect_to member_portal_path, notice: "User created."
       else
         render :new
       end
