@@ -4,39 +4,58 @@ class LeaderboardsController < ApplicationController
 
   # GET /leaderboards
   def index
-    @track_type_options = Track.track_type_options
-    @weather_conditions_options = Track.weather_conditions_options
-    @times_of_day_options = Track.times_of_day_options
+    @tracks = Track.where(track_params)
+    @leaderboards = Leaderboard.where(leaderboard_params)
+  end
 
-    # Start with all leaderboards and progressively filter them based on provided params
-    @leaderboards = Leaderboard.includes(:track)
-
-    if params[:track_type].present?
-      @leaderboards = @leaderboards.where(tracks: { track_type: params[:track_type] })
+  # Example method to fetch tracks based on track_type
+  def tracks_by_type
+    if params[:track_type]
+      @tracks = Track.where(track_type: params[:track_type])
+      puts @tracks.inspect
+    else
+      @tracks = Track.none
+      puts @tracks.inspect
     end
-
-    if params[:weather_condition].present?
-      @leaderboards = @leaderboards.where(weather_condition: params[:weather_condition])
-    end
-
-    if params[:time_of_day].present?
-      @leaderboards = @leaderboards.where(time_of_day: params[:time_of_day])
-    end
-
-    # Initialize to nil or an empty ActiveRecord::Relation if no filters are applied
-    @leaderboards = @leaderboards.references(:track)
 
     respond_to do |format|
-      format.html # index.html.erb
-      format.js do
-        # On AJAX request, only update the necessary instance variables if needed
-        # For example, you may want to load tracks based on the selected track type
-        if params[:track_type].present?
-          @tracks = Track.where(track_type: params[:track_type])
-        end
-      end
+      format.turbo_stream
     end
   end
+
+  # GET /leaderboards_by_track
+  def leaderboards_by_track
+    # Lookup and send back the leaderboards for the given track_id
+    @leaderboards = Leaderboard.where(track_id: params[:track_id])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  # GET /track_leaderboards_by_weather_condition
+  def track_leaderboards_by_weather_condition
+    @leaderboards = Leaderboard.where(track_id: params[:track_id], weather_condition: params[:weather_condition])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  # GET /track_leaderboards_by_time_of_day
+  def track_leaderboards_by_time_of_day
+    @leaderboards = Leaderboard.where(track_id: params[:track_id], time_of_day: params[:time_of_day])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
+  # GET /track_leaderboards_by_weather_condition_and_time_of_day
+  def track_leaderboards_by_weather_condition_and_time_of_day
+    @leaderboards = Leaderboard.where(track_id: params[:track_id], weather_condition: params[:weather_condition], time_of_day: params[:time_of_day])
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
 
   # GET /tracks/:track_id/leaderboards/new
   def new
@@ -92,7 +111,15 @@ class LeaderboardsController < ApplicationController
     @track = Track.find(params[:track_id])
   end
 
+  # def leaderboard_params
+  #   params.require(:leaderboard).permit(:weather_condition, :time_of_day, :track_id)
+  # end
+
+  def track_params
+    params.permit(:track_type)
+  end
+
   def leaderboard_params
-    params.require(:leaderboard).permit(:weather_condition, :time_of_day, :track_id)
+    params.permit(:weather_condition, :time_of_day, :track_id)
   end
 end

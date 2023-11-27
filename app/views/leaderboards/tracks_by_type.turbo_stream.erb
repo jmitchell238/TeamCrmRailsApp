@@ -1,0 +1,4 @@
+
+<%= turbo_stream.update 'track_name_select' do %>
+  <%= render partial: 'leaderboards/track_name_selections', locals: { tracks: @tracks } %>
+<% end %>

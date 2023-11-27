@@ -55,4 +55,9 @@ Rails.application.routes.draw do
   get '/members', to: 'members#index'
   get '/leaderboard', to: 'leaderboard#index'
   get '/tracks/fetch_names', to: 'tracks#fetch_names'
+  get 'tracks_by_type', to: 'leaderboards#tracks_by_type'
+  get 'leaderboards_by_track', to: 'leaderboards#leaderboards_by_track'
+  get 'track_leaderboards_by_weather_condition', to: 'leaderboards#track_leaderboards_by_weather_condition'
+  get 'track_leaderboards_by_time_of_day', to: 'leaderboards#track_leaderboards_by_time_of_day'
+  get 'track_leaderboards_by_weather_condition_and_time_of_day', to: 'leaderboards#track_leaderboards_by_weather_condition_and_time_of_day'
 end

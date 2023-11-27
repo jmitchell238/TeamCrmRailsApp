@@ -7,76 +7,117 @@
 
   <!-- Advanced filters form -->
   <div class="w-full mb-4 px-4">
-    <!-- Update the form tag to include an id 'filter_form' -->
-    <%= form_with url: leaderboards_path, method: :get, id: "filter_form", local: true, class: "flex flex-col space-y-4 justify-center" do |form| %>
-      <div class="flex flex-col items-start space-y-1">
-        <%= form.label :track_type, class: 'text-sm font-medium' %>
-        <%= form.select :track_type, options_for_select(['Supercross', 'Motocross'], params[:track_type]), { include_blank: 'Select Type' }, { id: 'track_type_select', class: 'border-gray-300 rounded-md p-2' } %>      </div>
-      </div>
+    
+    <%= form_with url: leaderboards_path, method: :get, id: 'leaderboard_form' do |form| %>
+      <%= select_tag 'track_type', options_for_select(['Supercross', 'Motocross']), prompt: 'Select Track Type', id: 'track_type_select' %>
+      
+      <%= select_tag 'track_id', options_for_select([]), prompt: 'Select Track Name', id: 'track_name_select', disabled: true %>
+      
+      <%= select_tag 'time_of_day', options_for_select(['Morning', 'Noon', 'Evening', 'Night']), prompt: 'Select Time Of Day', id: 'time_of_day_select', disabled: true %>
+      
+      <%= select_tag 'weather_condition', options_for_select(['Clear', 'Rain', 'Wet']), prompt: 'Select Weather Condition', id: 'weather_condition_select', disabled: true %>
 
-      <!-- Track Name -->
-      <div class="flex flex-col items-start space-y-1">
-        <%= form.label :track_id, class: 'text-sm font-medium' %>
-        <% if params[:track_type].present? %>
-          <%= form.collection_select :track_id, Track.where(track_type: params[:track_type]), :id, :track_name, { include_blank: 'Select Track' }, { id: 'track_name_select', class: 'border-gray-300 rounded-md p-2' } %>
-        <% end %>
-      </div>
-
-      <!-- Weather Condition -->
-      <div class="flex flex-col items-start space-y-1">
-        <%= form.label :weather_condition, class: 'text-sm font-medium' %>
-        <% if params[:track_id].present? %>
-          <%= form.select :weather_condition, options_for_select(['Clear', 'Rain', 'Wet'], params[:weather_condition]), { include_blank: 'Select Weather' }, class: 'border-gray-300 rounded-md p-2', onchange: "this.form.submit()" %>
-        <% end %>
-      </div>
-
-      <!-- Time of Day -->
-      <div class="flex flex-col items-start space-y-1">
-        <%= form.label :time_of_day, class: 'text-sm font-medium' %>
-        <% if params[:weather_condition].present? %>
-          <%= form.select :time_of_day, options_for_select(['Morning', 'Noon', 'Evening', 'Night'], params[:time_of_day]), { include_blank: 'Select Time of Day' }, class: 'border-gray-300 rounded-md p-2', onchange: "this.form.submit()" %>
-        <% end %>
-      </div>
-
-      <%= form.submit "Filter", class: "px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring" %>
+      <%= submit_tag 'Search', id: 'search_button', disabled: true %>
     <% end %>
   </div>
 
-  <!-- Remove the existing div with id 'leaderboards_div' -->
-  <!-- Instead, use a new div with id 'content_placeholder' to mark where the content updates will occur -->
-  <div id="content_placeholder">
-    <%= render 'leaderboards/leaderboard' %>
+  <div>
+    <% if @leaderboards.present? %>
+      <% @leaderboards.each do |leaderboard| %>
+        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 shadow border border-gray-200 bg-gray-100 mb-4 mx-2">
+          <%= link_to track_leaderboard_path(leaderboard.track, leaderboard), class: "block font-bold mb-2 text-xl", method: :get do %>
+            🏁 <%= leaderboard.track.track_name %>
+          <% end %>
+          <div><strong>Weather:</strong> <%= leaderboard.weather_condition %></div>
+          <div><strong>Time of Day:</strong> <%= leaderboard.time_of_day %></div>
+        </div>
+      <% end %>
+    <% else %>
+    <p class="w-full text-center">No leaderboard entries found.</p>
+    <% end %>
   </div>
 
 </div>
 
 <script>
-document.addEventListener('turbolinks:load', function() {
-  // Assuming your track type select has an ID 'track_type_select'
-  var trackTypeSelect = document.getElementById('track_type_select');
+  document.addEventListener("turbo:load", function() {
+    console.log("Turbo loaded"); // Check if this is logging multiple times
+  const trackTypeSelect = document.getElementById('track_type_select');
+  console.log(trackTypeSelect); // Check the value here
   if (trackTypeSelect) {
-    trackTypeSelect.addEventListener('change', function() {
-      // Find the form that this select box belongs to and submit it
-      var form = document.getElementById('filter_form');
-      if (form) {
-        form.requestSubmit(); // Triggers form submission without needing to click the filter button
+    const trackNameSelect = document.getElementById('track_name_select');
+    const timeOfDaySelect = document.getElementById('time_of_day_select');
+    const weatherConditionSelect = document.getElementById('weather_condition_select');
+    
+    // Enable the next dropdown based on the current selection
+    const enableSelect = (selectElement, enable) => {
+      selectElement.disabled = !enable;
+      if (!enable) selectElement.innerHTML = '';
+    };
+
+    // Listen to Turbo Stream events when updates to the 'track_name_select' occur
+    document.addEventListener("turbo:after-stream-render", function(event) {
+      if (event.target.id === 'track_name_select') {
+        enableSelect(trackNameSelect, true);
+        enableSelect(timeOfDaySelect, false);
+        enableSelect(weatherConditionSelect, false);
       }
     });
-  }
-});
-document.addEventListener('turbolinks:load', function() {
-  // Your event listeners will go here
-  var form = document.getElementById('filter_form');
-  if (form) {
-    form.addEventListener('ajax:success', function(event) {
-      // Handle successful AJAX response here
-      var detail = event.detail;
-      var data = detail[0], status = detail[1], xhr = detail[2];
 
-      // Use Turbolinks to update the page body with the returned HTML
-      Turbolinks.clearCache();
-      Turbolinks.visit(xhr.responseURL, { action: 'replace' });
+    // Fetch Tracks by selected Track Type
+    trackTypeSelect.addEventListener('change', function() {
+      enableSelect(trackNameSelect, false);
+      fetch('/tracks_by_type?track_type=' + encodeURIComponent(this.value), {
+        method: 'GET',
+        headers: {
+          'Accept': 'text/vnd.turbo-stream.html',
+        }
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      }).then(responseText => {
+        Turbo.renderStreamMessage(responseText);
+        enableSelect(trackNameSelect, true);
+      }).catch(error => {
+        console.error('Failed to fetch tracks:', error);
+      });
     });
+
+    // Fetch Leaderboards by selected Track Name
+    trackNameSelect.addEventListener('change', function() {
+      enableSelect(timeOfDaySelect, true);
+
+      fetch('/leaderboards_by_track?track_id=' + encodeURIComponent(this.value), {
+        method: 'GET',
+        headers: {
+          'Accept': 'text/vnd.turbo-stream.html',
+        }
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      }).then(responseText => {
+        Turbo.renderStreamMessage(responseText);
+      }).catch(error => {
+        console.error('Failed to fetch leaderboards:', error);
+      });
+    });
+
+    // Enable the weather condition select when a time of day has been selected
+    timeOfDaySelect.addEventListener('change', function() {
+      enableSelect(weatherConditionSelect, true);
+    });
+
+    // Enable the search button when all selections have been made
+    weatherConditionSelect.addEventListener('change', function() {
+      const searchButton = document.getElementById('search_button');
+      searchButton.disabled = !(trackTypeSelect.value && trackNameSelect.value && timeOfDaySelect.value && this.value);
+    });
+  } else {
+    console.log("trackTypeSelect not found!");
   }
 });
 </script>
