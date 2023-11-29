@@ -1,18 +1,25 @@
-<div class="flex justify-center items-center h-full">
+<!-- app/views/tracks/new.html.erb -->
 
-    <%= form_with model: @track, url: tracks_path, method: :post, html: { class: 'w-full max-w-md p-4 bg-white' } do |form| %>
-  
-    <h1 class="text-2xl mb-4">Add a Track</h1>
+<div class="flex items-center justify-center pt-8">
+  <div class="p-8 bg-white shadow-lg rounded-md w-full sm:w-1/2 outline outline-1 outline-gray-300">
+    <h1 class="text-2xl font-bold underline text-gray-700 text-center pb-4">Add Track</h1>
 
-
-      <div class="mb-4">
-        <%= form.label :track_name %>
-        <%= form.text_field :track_name, class: 'w-full border p-2 rounded' %>
-      </div>
+      <%= form_with model: @track, url: tracks_path, class: '2-2xl' do |form| %>
 
         <div class="mb-4">
-            <%= form.label :track_type %>
-            <%= form.text_field :track_type, class: 'w-full border p-2 rounded' %>
+          <%= form.label :track_name %>
+          <%= form.text_field :track_name, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+          <%= form.label :track_type, class: 'block text-gray-700 text-sm font-bold mb-2'  %>
+
+          <% Track.track_type_options.each do |option| %>
+            <label class="inline-flex items-center">
+              <%= form.check_box :track_type, {multiple: false }, option, nil %>
+              <span class="mr-3 ml-2"><%= option.capitalize %></span>
+            </label>
+          <% end %>
         </div>
 
         <div class="mb-4">
@@ -30,45 +37,57 @@
             <%= form.text_field :track_image_uri, class: 'w-full border p-2 rounded' %>
         </div>
 
-        <div class="mb-4">
-            <%= form.label :track_map_uri %>
-            <%= form.text_field :track_map_uri, class: 'w-full border p-2 rounded' %>
-        </div>
+<!--      Commenting out track_map_uri and track_video_preview_uri for now since we aren't using them yet.-->
+<!--        <div class="mb-4">-->
+            <%#= form.label :track_map_uri %>
+            <%#= form.text_field :track_map_uri, class: 'w-full border p-2 rounded' %>
+<!--        </div>-->
 
-        <div class="mb-4">
-            <%= form.label :track_video_preview_uri %>
-            <%= form.text_field :track_video_preview_uri, class: 'w-full border p-2 rounded' %>
-        </div>
+<!--        <div class="mb-4">-->
+            <%#= form.label :track_video_preview_uri %>
+            <%#= form.text_field :track_video_preview_uri, class: 'w-full border p-2 rounded' %>
+<!--        </div>-->
 
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Selectable Times of Day
+<!--        <div class="mb-4">-->
+<!--          <label class="block text-gray-700 text-sm font-bold mb-2">-->
+<!--            Selectable Times of Day-->
+<!--          </label>-->
+          <%# Track.times_of_day_options.each do |option| %>
+<!--            <label class="inline-flex items-center">-->
+              <%#= check_box_tag 'track[track_times_of_day][]', option, @track.track_times_of_day&.include?(option), id: "track_times_of_day_#{option.parameterize}", class: "form-checkbox text-blue-600 mr-2" %>
+<!--              <span class="ml-2"><%#= option.capitalize %></span>-->
+<!--            </label>-->
+          <%# end %>
+<!--        </div>-->
+
+<!--        <div class="mb-4">-->
+<!--          <label class="block text-gray-700 text-sm font-bold mb-2">-->
+<!--            Selectable Weather Conditions-->
+<!--          </label>-->
+          <%# Track.weather_conditions_options.each do |option| %>
+<!--            <label class="inline-flex items-center">-->
+              <%#= check_box_tag 'track[track_weather_conditions][]', option, @track.track_weather_conditions&.include?(option), id: "track_weather_conditions_#{option.parameterize}", class: "form-checkbox text-blue-600 mr-2" %>
+<!--              <span class="ml-2"><%#= option.capitalize %></span>-->
+<!--            </label>-->
+          <%# end %>
+<!--        </div>-->
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">
+          Track Conditions
+        </label>
+        <% Track.track_conditions_options.each do |option| %>
+          <label class="inline-flex items-center">
+            <%= check_box_tag 'track[track_conditions][]', option, @track.track_conditions&.include?(option), id: "track_conditions_#{option.parameterize}", class: "form-checkbox text-blue-600 mr-2" %>
+            <span class="mr-3 ml-2"><%= option.capitalize %></span>
           </label>
-          <% Track.times_of_day_options.each do |option| %>
-            <label class="inline-flex items-center">
-              <%= check_box_tag 'track[track_times_of_day][]', option, @track.track_times_of_day&.include?(option), id: "track_times_of_day_#{option.parameterize}", class: "form-checkbox text-blue-600 mr-2" %>
-              <span class="ml-2"><%= option.capitalize %></span>
-            </label>
-          <% end %>
-        </div>
-    
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Selectable Weather Conditions
-          </label>
-          <% Track.weather_conditions_options.each do |option| %>
-            <label class="inline-flex items-center">
-              <%= check_box_tag 'track[track_weather_conditions][]', option, @track.track_weather_conditions&.include?(option), id: "track_weather_conditions_#{option.parameterize}", class: "form-checkbox text-blue-600 mr-2" %>
-              <span class="ml-2"><%= option.capitalize %></span>
-            </label>
-          <% end %>
-        </div>
-  
-      <!-- Add other fields as needed -->
-  
-      <div class="text-center">
-        <%= form.submit 'Add Track', class: 'bg-blue-500 text-white py-2 px-4 rounded' %>
+        <% end %>
       </div>
-    <% end %>
+
+        <div class="text-center">
+          <%= form.submit 'Add Track', class: 'bg-blue-500 text-white py-2 px-4 rounded' %>
+        </div>
+      <% end %>
   </div>
+</div>
   

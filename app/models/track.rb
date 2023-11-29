@@ -10,41 +10,46 @@ class Track < ApplicationRecord
     validates :track_description, presence: true
     validates :track_pack, presence: true
     validates :track_image_uri, presence: true
-    validates :track_map_uri, presence: true
-    validates :track_video_preview_uri, presence: true
-    validates :track_weather_conditions, presence: true
-    validates :track_times_of_day, presence: true
+    validates :track_conditions, presence: true
+    validates :track_map_uri, presence: false
+    validates :track_video_preview_uri, presence: false
+
+    # Commenting these out for now because they are not being used
+    # validates :track_weather_conditions, presence: true
+    # validates :track_times_of_day, presence: true
 
     after_create :create_leaderboards_for_conditions
 
+    # Class method to provide options for Track Type
+    def self.track_type_options
+        %w[Supercross National]
+    end
+
    # Class method to provide options for weather conditions
     def self.weather_conditions_options
-        ['Clear', 'Rain', 'Wet']
+        %w[Clear Rain Wet]
     end
 
     # Class method to provide options for times of day
     def self.times_of_day_options
-        ['Morning', 'Noon', 'Evening', 'Night']
+        %w[Morning Afternoon Night]
     end
 
-    # Class method to provide options for Track Type
-    def self.track_type_options
-      ['Supercross', 'Motocross', 'Enduro', 'Freestyle', 'Other']
+    # There aren't weather Condition options and time of day Options. There are just OPTIONS
+    # Options are Morning, Afternoon, Night, Rainy
+    def self.track_conditions_options
+        %w[Morning Afternoon Night Rainy]
     end
 
     private
 
     def create_leaderboards_for_conditions
-        track_times_of_day.each do |time|
-          track_weather_conditions.each do |weather|
-            leaderboards.create!(
-              track_id: id,
-              weather_condition: weather,
-              time_of_day: time
-              # User and lap_time are not assigned here; they will be populated when a user submits a time.
-            )
-          end
+        track_conditions.each do |condition|
+          leaderboards.create!(
+            track_id: id,
+            track_condition: condition,
+            track_type: track_type
+          )
         end
     end
-
 end

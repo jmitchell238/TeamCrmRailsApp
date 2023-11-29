@@ -18,9 +18,20 @@
             <div>
                 <%= form.submit "Sign In", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
             </div>
-
         <% end %>
 
-        <%= link_to "Forgot Password?", new_password_reset_path %>
+      <div class="text-black text-xs pt-8">
+        <p>
+          Don't have an account?
+        </p>
+        <%= link_to "Sign Up", new_registration_path, class: "text-blue-700 hover:text-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto dark:text-blue-600 dark:hover:text-blue-700 dark:focus:ring-blue-800" %>
+      </div>
+
+      <div>
+        <p>
+          Forgot your Password?
+        </p>
+        <%= link_to "Reset Password?", new_password_reset_path, class: "text-blue-700 hover:text-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto  dark:text-blue-600 dark:hover:text-blue-700 dark:focus:ring-blue-800" %>
+      </div>
     </div>
 </div>

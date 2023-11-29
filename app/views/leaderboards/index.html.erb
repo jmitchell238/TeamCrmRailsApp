@@ -9,13 +9,12 @@
   <div class="w-full mb-4 px-4">
     
     <%= form_with url: leaderboards_path, method: :get, id: 'leaderboard_form' do |form| %>
-      <%= select_tag 'track_type', options_for_select(['Supercross', 'Motocross']), prompt: 'Select Track Type', id: 'track_type_select' %>
+      <%= select_tag 'track_type', options_for_select(Track.track_type_options), prompt: 'Select Track Type', id: 'track_type_select' %>
       
       <%= select_tag 'track_id', options_for_select([]), prompt: 'Select Track Name', id: 'track_name_select', disabled: true %>
-      
-      <%= select_tag 'time_of_day', options_for_select(['Morning', 'Noon', 'Evening', 'Night']), prompt: 'Select Time Of Day', id: 'time_of_day_select', disabled: true %>
-      
-      <%= select_tag 'weather_condition', options_for_select(['Clear', 'Rain', 'Wet']), prompt: 'Select Weather Condition', id: 'weather_condition_select', disabled: true %>
+      <%= select_tag 'track_id', options_for_select([]), prompt: 'Select Track', id: 'leaderboards_by_track_name_select', disabled: true %>
+
+      <%= select_tag 'track_conditions', options_for_select([]), prompt: 'Select Track Condition', id: 'track_condition_select', disabled:true %>
 
       <%= submit_tag 'Search', id: 'search_button', disabled: true %>
     <% end %>
@@ -28,8 +27,7 @@
           <%= link_to track_leaderboard_path(leaderboard.track, leaderboard), class: "block font-bold mb-2 text-xl", method: :get do %>
             🏁 <%= leaderboard.track.track_name %>
           <% end %>
-          <div><strong>Weather:</strong> <%= leaderboard.weather_condition %></div>
-          <div><strong>Time of Day:</strong> <%= leaderboard.time_of_day %></div>
+          <div><strong>Condition:</strong> <%= leaderboard.track_condition %></div>
         </div>
       <% end %>
     <% else %>
@@ -42,82 +40,84 @@
 <script>
   document.addEventListener("turbo:load", function() {
     console.log("Turbo loaded"); // Check if this is logging multiple times
-  const trackTypeSelect = document.getElementById('track_type_select');
-  console.log(trackTypeSelect); // Check the value here
-  if (trackTypeSelect) {
-    const trackNameSelect = document.getElementById('track_name_select');
-    const timeOfDaySelect = document.getElementById('time_of_day_select');
-    const weatherConditionSelect = document.getElementById('weather_condition_select');
-    
-    // Enable the next dropdown based on the current selection
-    const enableSelect = (selectElement, enable) => {
-      selectElement.disabled = !enable;
-      if (!enable) selectElement.innerHTML = '';
-    };
+    const trackTypeSelect = document.getElementById('track_type_select');
+    console.log(trackTypeSelect); // Check the value here
+    if (trackTypeSelect) {
+      const trackNameSelect = document.getElementById('track_name_select');
+      const leaderboardsByTrackNameSelect = document.getElementById('leaderboards_by_track_name_select');
+      const trackConditionSelect = document.getElementById('track_condition_select');
 
-    // Listen to Turbo Stream events when updates to the 'track_name_select' occur
-    document.addEventListener("turbo:after-stream-render", function(event) {
-      if (event.target.id === 'track_name_select') {
-        enableSelect(trackNameSelect, true);
-        enableSelect(timeOfDaySelect, false);
-        enableSelect(weatherConditionSelect, false);
-      }
-    });
+      // Enable the next dropdown based on the current selection
+      const enableSelect = (selectElement, enable) => {
+        selectElement.disabled = !enable;
+        if (!enable) selectElement.innerHTML = '';
+      };
 
-    // Fetch Tracks by selected Track Type
-    trackTypeSelect.addEventListener('change', function() {
-      enableSelect(trackNameSelect, false);
-      fetch('/tracks_by_type?track_type=' + encodeURIComponent(this.value), {
-        method: 'GET',
-        headers: {
-          'Accept': 'text/vnd.turbo-stream.html',
+      // Listen to Turbo Stream events when updates to the 'track_name_select' occur
+      document.addEventListener("turbo:after-stream-render", function(event) {
+        if (event.target.id === 'track_name_select') {
+          enableSelect(trackNameSelect, true);
+          enableSelect(leaderboardsByTrackNameSelect, true);
+          enableSelect(trackConditionSelect, false);
         }
-      }).then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text();
-      }).then(responseText => {
-        Turbo.renderStreamMessage(responseText);
-        enableSelect(trackNameSelect, true);
-      }).catch(error => {
-        console.error('Failed to fetch tracks:', error);
       });
-    });
 
-    // Fetch Leaderboards by selected Track Name
-    trackNameSelect.addEventListener('change', function() {
-      enableSelect(timeOfDaySelect, true);
-
-      fetch('/leaderboards_by_track?track_id=' + encodeURIComponent(this.value), {
-        method: 'GET',
-        headers: {
-          'Accept': 'text/vnd.turbo-stream.html',
+      // Listen to Turbo Stream events when updates to the 'track_condition_select' occur
+      document.addEventListener("turbo:after-stream-render", function(event) {
+        if (event.target.id === 'track_condition_select') {
+            console.log('track condition select turbo:after-stream-render fired');
+          enableSelect(trackConditionSelect, true);
         }
-      }).then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text();
-      }).then(responseText => {
-        Turbo.renderStreamMessage(responseText);
-      }).catch(error => {
-        console.error('Failed to fetch leaderboards:', error);
       });
-    });
 
-    // Enable the weather condition select when a time of day has been selected
-    timeOfDaySelect.addEventListener('change', function() {
-      enableSelect(weatherConditionSelect, true);
-    });
+      // Fetch Tracks by selected Track Type
+      trackTypeSelect.addEventListener('change', function() {
+        enableSelect(trackNameSelect, false);
+        fetch('/tracks_by_type?track_type=' + encodeURIComponent(this.value), {
+          method: 'GET',
+          headers: {
+            'Accept': 'text/vnd.turbo-stream.html',
+          }
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        }).then(responseText => {
+          Turbo.renderStreamMessage(responseText);
+          enableSelect(trackNameSelect, true);
+        }).catch(error => {
+          console.error('Failed to fetch tracks:', error);
+        });
+      });
 
-    // Enable the search button when all selections have been made
-    weatherConditionSelect.addEventListener('change', function() {
-      const searchButton = document.getElementById('search_button');
-      searchButton.disabled = !(trackTypeSelect.value && trackNameSelect.value && timeOfDaySelect.value && this.value);
-    });
-  } else {
-    console.log("trackTypeSelect not found!");
-  }
-});
+      // Fetch Leaderboards by selected Track Name
+      trackNameSelect.addEventListener('change', function() {
+        fetch('/leaderboards_by_track?track_id=' + encodeURIComponent(this.value), {
+          method: 'GET',
+          headers: {
+            'Accept': 'text/vnd.turbo-stream.html',
+          }
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        }).then(responseText => {
+          Turbo.renderStreamMessage(responseText);
+          enableSelect(trackConditionSelect, true);
+        }).catch(error => {
+          console.error('Failed to fetch leaderboards:', error);
+        });
+      });
+
+      // Enable the search button when all selections have been made
+      trackConditionSelect.addEventListener('change', function() {
+        const searchButton = document.getElementById('search_button');
+        searchButton.disabled = !(trackTypeSelect.value && trackNameSelect.value && this.value);
+      });
+    } else {
+      console.log("trackTypeSelect not found!");
+    }
+  });
 </script>

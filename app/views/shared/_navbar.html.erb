@@ -36,7 +36,7 @@
       <input type="checkbox" id="user-menu-checkbox" class="hidden peer">
       
       <!-- Dropdown Menu controlled by the hidden checkbox -->
-      <ul class="hidden absolute bg-gray-800 text-white flex-col peer-checked:flex z-20 mt-4 rounded-bl-lg w-max right-0 id="user-menu">
+      <ul class="hidden absolute bg-gray-800 text-white flex-col peer-checked:flex z-20 mt-4 rounded-bl-lg w-max right-0" id="user-menu">
         <% if user_signed_in? %>
           <li class="<%= current_page?(user_path(current_user)) ? 'bg-red-500' : 'hover:bg-gray-700' %> px-6 py-2">
             <%= link_to 'Profile', user_path(current_user), class: 'block text-white' %>

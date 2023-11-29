@@ -11,11 +11,16 @@ class TracksController < ApplicationController
 
     def create
       if current_user.admin?
+        puts "INSIDE THE CREATE TRACK METHOD"
         @track = Track.new(track_params)
 
         if @track.save
+          puts "Track saved!"
           redirect_to tracks_path, notice: 'Track was successfully created.'
         else
+          puts "HIT THE ELSE STATEMENT"
+          @errors = @track.errors.full_messages
+          puts @errors.inspect
           render :new
         end
       else
@@ -72,7 +77,8 @@ private
         :track_map_uri,
         :track_video_preview_uri,
         track_times_of_day: [],
-        track_weather_conditions: []
+        track_weather_conditions: [],
+        track_conditions: []
         )
     end
 end

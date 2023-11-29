@@ -4,8 +4,9 @@ class LeaderboardsController < ApplicationController
 
   # GET /leaderboards
   def index
-    @tracks = Track.where(track_params)
-    @leaderboards = Leaderboard.where(leaderboard_params)
+    # @tracks = Track.where(track_params)
+    # @leaderboards = Leaderboard.where(leaderboard_params)
+    @leaderboards = Leaderboard.all
   end
 
   # Example method to fetch tracks based on track_type
@@ -23,34 +24,33 @@ class LeaderboardsController < ApplicationController
     end
   end
 
+  # GET /leaderboards_by_track_type
+  def leaderboards_by_track_type
+    if params[:track_type]
+      @leaderboards = Leaderboard.where(track_type: params[:track_type])
+    else
+      @leaderboards = Leaderboard.none
+    end
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   # GET /leaderboards_by_track
   def leaderboards_by_track
     # Lookup and send back the leaderboards for the given track_id
     @leaderboards = Leaderboard.where(track_id: params[:track_id])
+
     respond_to do |format|
       format.turbo_stream
     end
   end
 
-  # GET /track_leaderboards_by_weather_condition
-  def track_leaderboards_by_weather_condition
-    @leaderboards = Leaderboard.where(track_id: params[:track_id], weather_condition: params[:weather_condition])
-    respond_to do |format|
-      format.turbo_stream
-    end
-  end
+  # GET /track_leaderboards_by_track_condition
+  def track_leaderboards_by_track_condition
+    @leaderboards = Leaderboard.where(track_id: params[:track_id], track_condition: params[:track_condition])
 
-  # GET /track_leaderboards_by_time_of_day
-  def track_leaderboards_by_time_of_day
-    @leaderboards = Leaderboard.where(track_id: params[:track_id], time_of_day: params[:time_of_day])
-    respond_to do |format|
-      format.turbo_stream
-    end
-  end
-
-  # GET /track_leaderboards_by_weather_condition_and_time_of_day
-  def track_leaderboards_by_weather_condition_and_time_of_day
-    @leaderboards = Leaderboard.where(track_id: params[:track_id], weather_condition: params[:weather_condition], time_of_day: params[:time_of_day])
     respond_to do |format|
       format.turbo_stream
     end
@@ -111,15 +111,11 @@ class LeaderboardsController < ApplicationController
     @track = Track.find(params[:track_id])
   end
 
-  # def leaderboard_params
-  #   params.require(:leaderboard).permit(:weather_condition, :time_of_day, :track_id)
-  # end
-
   def track_params
-    params.permit(:track_type)
+    params.permit(:track_type, :track_id, :track_condition)
   end
 
   def leaderboard_params
-    params.permit(:weather_condition, :time_of_day, :track_id)
+    params.permit(:track_id, :track_condition, :track_type)
   end
 end
