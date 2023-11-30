@@ -6,18 +6,40 @@
   <h1 class="font-bold text-2xl mb-4 w-full text-center">Leaderboards</h1>
 
   <!-- Advanced filters form -->
-  <div class="w-full mb-4 px-4">
-    
-    <%= form_with url: leaderboards_path, method: :get, id: 'leaderboard_form' do |form| %>
-      <%= select_tag 'track_type', options_for_select(Track.track_type_options), prompt: 'Select Track Type', id: 'track_type_select' %>
+  <div class="flex flex-col items-center w-full mb-4 px-4">
+    <%= form_with(url: leaderboards_path, method: :get, id: 'leaderboard_form', local: true) do |form| %>
+      <div class="flex flex-col items-center space-y-5">
+        <%= select_tag('track_type', options_for_select(Track.track_type_options.map { |option| [option.capitalize, option] }), {
+          class: "bg-white mb-4 block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500",
+          include_blank: 'Select Track Type',
+          id: 'track_type_select',
+        }) %>
 
-      <%= select_tag 'track_name', options_for_select([]), prompt: 'Select Track', id: 'leaderboards_by_track_name_select', disabled: true %>
+        <%= select_tag('track_name', options_for_select([]), {
+          class: "mb-4 block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 text-gray-500",
+          include_blank: 'Select Track',
+          id: 'leaderboards_by_track_name_select',
+          disabled: true
+        }) %>
 
-      <%= select_tag 'track_conditions', options_for_select([]), prompt: 'Select Track Condition', id: 'track_condition_select', disabled:true %>
+        <%= select_tag('track_conditions', options_for_select([]), {
+          class: "mb-4 block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 text",
+          include_blank: 'Select Track Condition',
+          id: 'track_condition_select',
+          disabled: true
+        }) %>
 
-      <%= submit_tag 'Search', id: 'search_button', disabled: true, class: 'hidden' %>
+        <%= submit_tag('Search', {
+          class: 'appearance-none border border-gray-300 rounded-lg text-lg py-2 px-5 bg-white text-black focus:outline-none shadow hidden', # Hidden by default
+          id: 'search_button',
+          disabled: true
+        }) %>
+      </div>
     <% end %>
   </div>
+
+
+
 
   <!-- Leaderboards table -->
   <div id="leaderboards-container" style="display: none;">
@@ -26,14 +48,15 @@
 
 </div>
 
-<script>
-  document.addEventListener("turbo:load", function() {
-    console.log("Turbo loaded"); // Check if this is logging multiple times
-    const trackTypeSelect = document.getElementById('track_type_select');
-    console.log(trackTypeSelect); // Check the value here
-    if (trackTypeSelect) {
-      const leaderboardsByTrackNameSelect = document.getElementById('leaderboards_by_track_name_select');
-      const trackConditionSelect = document.getElementById('track_condition_select');
+<% content_for :extra_js do %>
+    <script>
+      document.addEventListener("turbo:load", function() {
+        console.log("Turbo loaded"); // Check if this is logging multiple times
+        const trackTypeSelect = document.getElementById('track_type_select');
+        console.log(trackTypeSelect); // Check the value here
+        if (trackTypeSelect) {
+          const leaderboardsByTrackNameSelect = document.getElementById('leaderboards_by_track_name_select');
+          const trackConditionSelect = document.getElementById('track_condition_select');
 
       // Enable the next dropdown based on the current selection
       const enableSelect = (selectElement, enable) => {
@@ -41,100 +64,101 @@
         if (!enable) selectElement.innerHTML = '';
       };
 
-      // Listen to Turbo Stream events when updates to the 'track_name_select' occur
-      document.addEventListener("turbo:after-stream-render", function(event) {
-        if (event.target.id === 'leaderboards_by_track_name_select') {
-          enableSelect(leaderboardsByTrackNameSelect, true);
-          enableSelect(trackConditionSelect, true);
-        }
-      });
+          // Listen to Turbo Stream events when updates to the 'track_name_select' occur
+          document.addEventListener("turbo:after-stream-render", function(event) {
+            if (event.target.id === 'leaderboards_by_track_name_select') {
+              enableSelect(leaderboardsByTrackNameSelect, true);
+              enableSelect(trackConditionSelect, true);
+            }
+          });
 
-      // Listen to Turbo Stream events when updates to the 'track_condition_select' occur
-      document.addEventListener("turbo:after-stream-render", function(event) {
-        if (event.target.id === 'track_condition_select') {
-            console.log('track condition select turbo:after-stream-render fired');
-          enableSelect(trackConditionSelect, true);
-        }
-      });
+          // Listen to Turbo Stream events when updates to the 'track_condition_select' occur
+          document.addEventListener("turbo:after-stream-render", function(event) {
+            if (event.target.id === 'track_condition_select') {
+                console.log('track condition select turbo:after-stream-render fired');
+              enableSelect(trackConditionSelect, true);
+            }
+          });
 
-      // Fetch Tracks by selected Track Type
-      trackTypeSelect.addEventListener('change', function() {
-        enableSelect(leaderboardsByTrackNameSelect, false);
-        fetch('/leaderboards_by_track_type?track_type=' + encodeURIComponent(this.value), {
-          method: 'GET',
-          headers: {
-            'Accept': 'text/vnd.turbo-stream.html',
-          }
-        }).then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.text();
-        }).then(responseText => {
-          Turbo.renderStreamMessage(responseText);
-          enableSelect(leaderboardsByTrackNameSelect, true);
-        }).catch(error => {
-          console.error('Failed to fetch tracks:', error);
-        });
-      });
-
-      // Fetch Leaderboards by selected Track Name
-      leaderboardsByTrackNameSelect.addEventListener('change', function() {
-        fetch('/leaderboards_by_track?track_name=' + encodeURIComponent(this.value), {
-          method: 'GET',
-          headers: {
-            'Accept': 'text/vnd.turbo-stream.html',
-          }
-        }).then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.text();
-        }).then(responseText => {
-          Turbo.renderStreamMessage(responseText);
-          enableSelect(trackConditionSelect, true);
-        }).catch(error => {
-          console.error('Failed to fetch leaderboards:', error);
-        });
-      });
-
-      // Fetch Leaderboards by selected Track Condition
-      trackConditionSelect.addEventListener('change', function() {
-          const selectedTrackName = document.getElementById('leaderboards_by_track_name_select').value;
-          const selectedTrackCondition = this.value;
-
-          fetch('/track_leaderboards_by_track_condition?track_name=' + encodeURIComponent(selectedTrackName) + '&track_condition=' + encodeURIComponent(selectedTrackCondition), {
+          // Fetch Tracks by selected Track Type
+          trackTypeSelect.addEventListener('change', function() {
+            enableSelect(leaderboardsByTrackNameSelect, false);
+            fetch('/leaderboards_by_track_type?track_type=' + encodeURIComponent(this.value), {
               method: 'GET',
               headers: {
-                  'Accept': 'text/vnd.turbo-stream.html',
+                'Accept': 'text/vnd.turbo-stream.html',
               }
-          }).then(response => {
+            }).then(response => {
               if (!response.ok) {
-                  throw new Error('Network response was not ok');
+                throw new Error('Network response was not ok');
               }
               return response.text();
-          }).then(responseText => {
+            }).then(responseText => {
               Turbo.renderStreamMessage(responseText);
-              const leaderboardsContainer = document.getElementById('leaderboards-container');
-              leaderboardsContainer.style.display = 'block';
-          }).catch(error => {
-              console.error('Failed to fetch leaderboards by track condition:', error);
+              enableSelect(leaderboardsByTrackNameSelect, true);
+            }).catch(error => {
+              console.error('Failed to fetch tracks:', error);
+            });
           });
+
+          // Fetch Leaderboards by selected Track Name
+          leaderboardsByTrackNameSelect.addEventListener('change', function() {
+            fetch('/leaderboards_by_track?track_name=' + encodeURIComponent(this.value), {
+              method: 'GET',
+              headers: {
+                'Accept': 'text/vnd.turbo-stream.html',
+              }
+            }).then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.text();
+            }).then(responseText => {
+              Turbo.renderStreamMessage(responseText);
+              enableSelect(trackConditionSelect, true);
+            }).catch(error => {
+              console.error('Failed to fetch leaderboards:', error);
+            });
+          });
+
+          // Fetch Leaderboards by selected Track Condition
+          trackConditionSelect.addEventListener('change', function() {
+              const selectedTrackName = document.getElementById('leaderboards_by_track_name_select').value;
+              const selectedTrackCondition = this.value;
+
+              fetch('/track_leaderboards_by_track_condition?track_name=' + encodeURIComponent(selectedTrackName) + '&track_condition=' + encodeURIComponent(selectedTrackCondition), {
+                  method: 'GET',
+                  headers: {
+                      'Accept': 'text/vnd.turbo-stream.html',
+                  }
+              }).then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.text();
+              }).then(responseText => {
+                  Turbo.renderStreamMessage(responseText);
+                  const leaderboardsContainer = document.getElementById('leaderboards-container');
+                  leaderboardsContainer.style.display = 'block';
+              }).catch(error => {
+                  console.error('Failed to fetch leaderboards by track condition:', error);
+              });
+          });
+
+          const triggerSearch = () => {
+              const searchButton = document.getElementById('search_button');
+              const leaderboardsContainer = document.getElementById('leaderboards-container');
+
+              searchButton.click(); // Programmatically click the search button
+
+              // Show the leaderboards container when the search is triggered
+              leaderboardsContainer.style.display = 'block';
+          };
+
+          trackConditionSelect.addEventListener('change', triggerSearch);
+        } else {
+          console.log("trackTypeSelect not found!");
+        }
       });
-
-      const triggerSearch = () => {
-          const searchButton = document.getElementById('search_button');
-          const leaderboardsContainer = document.getElementById('leaderboards-container');
-
-          searchButton.click(); // Programmatically click the search button
-
-          // Show the leaderboards container when the search is triggered
-          leaderboardsContainer.style.display = 'block';
-      };
-
-      trackConditionSelect.addEventListener('change', triggerSearch);
-    } else {
-      console.log("trackTypeSelect not found!");
-    }
-  });
-</script>
+    </script>
+<% end %>
