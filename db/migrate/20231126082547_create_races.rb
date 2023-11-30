@@ -6,7 +6,7 @@ class CreateRaces < ActiveRecord::Migration[7.1]
       t.string :main_category # 'A', 'B', 'C', etc., applicable only if race_type is 'Main'
       # Add any other attributes relevant for a race
 
-      t.timestamps  # created_at, updated_at
+      t.timestamps # created_at, updated_at
     end
   end
 end

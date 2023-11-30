@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# == Schema Information
 class Tournament < ApplicationRecord
   # Associations
   has_many :rounds, dependent: :destroy
@@ -20,5 +23,4 @@ class Tournament < ApplicationRecord
   def register_user(user)
     # Logic to register a user for the tournament
   end
-
 end

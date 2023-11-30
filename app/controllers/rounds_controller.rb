@@ -1,3 +1,13 @@
+# frozen_string_literal: true
+
+# Controller: RoundsController
+# Purpose:
+# - Provide a controller for the Round model
+# - This controller handles the functionality of the Round portion of the application.
+# File Location:
+# - app/controllers/rounds_controller.rb
+# Tests Location:
+# - test/controllers/rounds_controller_test.rb
 class RoundsController < ApplicationController
   before_action :set_round, only: %i[show edit update destroy]
 
@@ -5,8 +15,7 @@ class RoundsController < ApplicationController
     @rounds = Round.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @round = Round.new
@@ -21,8 +30,7 @@ class RoundsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @round.update(round_params)

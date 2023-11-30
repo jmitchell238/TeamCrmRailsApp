@@ -1,3 +1,13 @@
+# frozen_string_literal: true
+
+# Controller: RaceParticipationsController
+# Purpose:
+# - Provide a controller for RaceParticipations model
+# - This controller handles the functionality of the RaceParticipation portion of the application.
+# File Location:
+# - app/controllers/race_participations_controller.rb
+# Tests Location:
+# - test/controllers/race_participations_controller_test.rb
 class RaceParticipationsController < ApplicationController
   before_action :set_race
   before_action :set_race_participation, only: %i[show edit update destroy]
@@ -8,8 +18,7 @@ class RaceParticipationsController < ApplicationController
   end
 
   # GET /races/:race_id/race_participations/1
-  def show
-  end
+  def show; end
 
   # GET /races/:race_id/race_participations/new
   def new
@@ -28,8 +37,7 @@ class RaceParticipationsController < ApplicationController
   end
 
   # GET /races/:race_id/race_participations/1/edit
-  def edit
-  end
+  def edit; end
 
   # PATCH/PUT /races/:race_id/race_participations/1
   def update
@@ -47,17 +55,18 @@ class RaceParticipationsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_race
-      @race = Race.find(params[:race_id])
-    end
 
-    def set_race_participation
-      @race_participation = @race.race_participations.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_race
+    @race = Race.find(params[:race_id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def race_participation_params
-      params.require(:race_participation).permit(:user_registration_id, :race_id, :position, :points)
-    end
+  def set_race_participation
+    @race_participation = @race.race_participations.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def race_participation_params
+    params.require(:race_participation).permit(:user_registration_id, :race_id, :position, :points)
+  end
 end

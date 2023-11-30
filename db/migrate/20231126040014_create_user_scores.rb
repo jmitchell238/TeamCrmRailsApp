@@ -6,7 +6,7 @@ class CreateUserScores < ActiveRecord::Migration[7.1]
       t.integer :points, default: 0 # Points earned by the user
       t.integer :position # Position of the user in the round
 
-      t.timestamps  # Automatically creates created_at and updated_at columns
+      t.timestamps # Automatically creates created_at and updated_at columns
     end
   end
 end

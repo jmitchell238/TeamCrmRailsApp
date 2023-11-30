@@ -1,3 +1,0 @@
-<%# app/views/leaderboards/_track_name_selections.html.erb %>
-
-<%= options_for_select([['Select Track Name', '', { disabled: true, selected: true }]] + @tracks.map { |track| [track.track_name, track.id] }) %>

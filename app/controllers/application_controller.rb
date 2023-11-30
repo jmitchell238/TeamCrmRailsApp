@@ -1,10 +1,19 @@
+# frozen_string_literal: true
+
+# Controller: ApplicationController
+# Purpose:
+# - Provide a base class for all controllers in the application
+# File Location:
+# - app/controllers/application_controller.rb
+# Tests Location:
+# - test/controllers/application_controller_test.rb
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
   private
 
   def authenticate_user!
-    redirect_to root_path, alert: "You must be signed in to do that." unless user_signed_in?
+    redirect_to root_path, alert: 'You must be signed in to do that.' unless user_signed_in?
   end
 
   def current_user
@@ -27,7 +36,7 @@ class ApplicationController < ActionController::Base
     session[:user_id] = user.id
   end
 
-  def logout(user)
+  def logout(_user)
     Current.user = nil
     reset_session
   end

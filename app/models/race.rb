@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# == Schema Information
 class Race < ApplicationRecord
   belongs_to :round
   has_many :race_participations

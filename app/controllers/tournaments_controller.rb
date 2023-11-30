@@ -1,3 +1,13 @@
+# frozen_string_literal: true
+
+# Controller: TournamentsController
+# Purpose:
+# - Provide a controller for the Tournament model
+# - This controller handles the functionality of the Tournament portion of the application.
+# File Location:
+# - app/controllers/tournaments_controller.rb
+# Tests Location:
+# - test/controllers/tournaments_controller_test.rb
 class TournamentsController < ApplicationController
   before_action :set_tournament, only: %i[show edit update destroy]
 
@@ -5,8 +15,7 @@ class TournamentsController < ApplicationController
     @tournaments = Tournament.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @tournament = Tournament.new
@@ -21,8 +30,7 @@ class TournamentsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @tournament.update(tournament_params)

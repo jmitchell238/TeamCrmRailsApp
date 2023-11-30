@@ -1,3 +1,13 @@
+# frozen_string_literal: true
+
+# Controller: UserScoresController
+# Purpose:
+# - Provide a controller for the UserScore model
+# - This controller handles the functionality of the UserScore portion of the application.
+# File Location:
+# - app/controllers/user_scores_controller.rb
+# Tests Location:
+# - test/controllers/user_scores_controller_test.rb
 class UserScoresController < ApplicationController
   before_action :set_user_score, only: %i[show edit update destroy]
 
@@ -5,8 +15,7 @@ class UserScoresController < ApplicationController
     @user_scores = UserScore.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @user_score = UserScore.new
@@ -21,8 +30,7 @@ class UserScoresController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @user_score.update(user_score_params)

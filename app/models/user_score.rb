@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# == Schema Information
 class UserScore < ApplicationRecord
   # Associations
   belongs_to :user_registration

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# == Schema Information
 class UserRegistration < ApplicationRecord
   belongs_to :user
   belongs_to :tournament

@@ -1,5 +1,6 @@
-# app/models/lap_time.rb
+# frozen_string_literal: true
 
+# == Schema Information
 class LapTime < ApplicationRecord
   belongs_to :user
   belongs_to :leaderboard
@@ -20,5 +21,4 @@ class LapTime < ApplicationRecord
 
     "#{lap_time_str[0..1]}:#{lap_time_str[2..3]}.#{lap_time_str[4..5]}"
   end
-
 end

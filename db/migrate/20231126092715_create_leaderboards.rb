@@ -7,9 +7,10 @@ class CreateLeaderboards < ActiveRecord::Migration[7.1]
       t.string :time_of_day # Time Of Day
       t.decimal :lap_time, null: false # User Lap Time
 
-      t.timestamps  # created_at updated_at
+      t.timestamps # created_at updated_at
     end
 
-    add_index :leaderboards, [:track_id, :user_id, :weather_condition, :time_of_day], name: 'index_leaderboards_on_track_and_conditions', unique: true
+    add_index :leaderboards, %i[track_id user_id weather_condition time_of_day],
+              name: 'index_leaderboards_on_track_and_conditions', unique: true
   end
 end

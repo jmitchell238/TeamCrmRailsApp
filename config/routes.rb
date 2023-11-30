@@ -4,10 +4,10 @@ Rails.application.routes.draw do
   resources :tracks
   resources :users
 
-  resource :session, only: [:new, :create, :destroy]
-  resource :registration, only: [:new, :create]
-  resource :password_reset, only: [:new, :create, :edit, :update]
-  resource :password, only: [:edit, :update]
+  resource :session, only: %i[new create destroy]
+  resource :registration, only: %i[new create]
+  resource :password_reset, only: %i[new create edit update]
+  resource :password, only: %i[edit update]
   resource :member_portal, only: [:show]
 
   # If user_registrations need nested resources or member/collection routes, they can be added here
@@ -44,8 +44,8 @@ Rails.application.routes.draw do
   resources :race_participations
 
   resources :tracks do
-    resources :leaderboards, only: [:new, :show, :create] do
-      resources :lap_times, only: [:new, :create, :destroy]
+    resources :leaderboards, only: %i[new show create] do
+      resources :lap_times, only: %i[new create destroy]
     end
   end
 

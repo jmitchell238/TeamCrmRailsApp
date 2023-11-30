@@ -1,40 +1,45 @@
+# frozen_string_literal: true
+
+# Controller: LeaderboardsController
+# Purpose:
+# - Provide a controller for the Leaderboard model
+# - This controller handles the functionality of the Leaderboard portion of the application.
+# File Location:
+# - app/controllers/leaderboards_controller.rb
+# Tests Location:
+# - test/controllers/leaderboards_controller_test.rb
 class LeaderboardsController < ApplicationController
   before_action :set_leaderboard, only: %i[show edit update destroy]
   before_action :set_track, only: %i[new create]
 
   # GET /leaderboards
   def index
-    # @tracks = Track.where(track_params)
-    # @leaderboards = Leaderboard.where(leaderboard_params)
-    @leaderboards = Leaderboard.all
+    @leaderboards = Leaderboard.where(leaderboard_params)
   end
 
   # Example method to fetch tracks based on track_type
   def tracks_by_type
     if params[:track_type]
       @tracks = Track.where(track_type: params[:track_type])
-      puts @tracks.inspect
     else
       @tracks = Track.none
-      puts @tracks.inspect
     end
 
-    respond_to do |format|
-      format.turbo_stream
-    end
+    respond_to(&:turbo_stream)
   end
 
   # GET /leaderboards_by_track_type
   def leaderboards_by_track_type
     if params[:track_type]
-      @leaderboards = Leaderboard.where(track_type: params[:track_type])
+      @_track_type = params[:track_type]
+      @leaderboards = Leaderboard.where(track_type: @_track_type)
+      @track_names = @leaderboards.distinct.pluck(:track_name)
     else
-      @leaderboards = Leaderboard.none
+      # Handle the case when track_type is not provided
+      @track_names = [] # or any default value you prefer
     end
 
-    respond_to do |format|
-      format.turbo_stream
-    end
+    respond_to(&:turbo_stream)
   end
 
   # GET /leaderboards_by_track
@@ -42,20 +47,19 @@ class LeaderboardsController < ApplicationController
     # Lookup and send back the leaderboards for the given track_id
     @leaderboards = Leaderboard.where(track_name: params[:track_name])
 
-    respond_to do |format|
-      format.turbo_stream
-    end
+    respond_to(&:turbo_stream)
   end
 
   # GET /track_leaderboards_by_track_condition
   def track_leaderboards_by_track_condition
-    @leaderboards = Leaderboard.where(track_id: params[:track_id], track_condition: params[:track_condition])
+    @leaderboards = Leaderboard.where(track_name: params[:track_name], track_condition: params[:track_condition])
+    @leaderboard = @leaderboards.first
+    puts @leaderboard.inspect
 
     respond_to do |format|
       format.turbo_stream
     end
   end
-
 
   # GET /tracks/:track_id/leaderboards/new
   def new
@@ -66,7 +70,7 @@ class LeaderboardsController < ApplicationController
   def create
     @leaderboard = Leaderboard.new(leaderboard_params)
     if @leaderboard.save
-      redirect_to track_leaderboards_path(@track), notice: "Leaderboard successfully created."
+      redirect_to track_leaderboards_path(@track), notice: 'Leaderboard successfully created.'
     else
       render :new
     end

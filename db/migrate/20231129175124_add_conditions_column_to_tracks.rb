@@ -16,7 +16,7 @@ class AddConditionsColumnToTracks < ActiveRecord::Migration[7.1]
       # Remove any duplicates and empty strings
       conditions = conditions.uniq.reject(&:empty?)
 
-      track.update(conditions: conditions)
+      track.update(conditions:)
     end
 
     # TODO: Remove these columns in a future migration

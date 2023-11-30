@@ -1,0 +1,5 @@
+
+
+<%= turbo_stream.update 'leaderboards-container' do %>
+  <%= render partial: 'leaderboards/leaderboard', locals: { leaderboard: @leaderboard } %>
+<% end %>

@@ -1,3 +1,12 @@
+# frozen_string_literal: true
+
+# Controller: RacesController
+# Purpose:
+# - Provide a controller for the Race model
+# Path:
+# - app/controllers/races_controller.rb
+# Tests Location:
+# - test/controllers/races_controller_test.rb
 class RacesController < ApplicationController
   before_action :set_round
   before_action :set_race, only: %i[show edit update destroy]
@@ -8,8 +17,7 @@ class RacesController < ApplicationController
   end
 
   # GET /rounds/:round_id/races/1
-  def show
-  end
+  def show; end
 
   # GET /rounds/:round_id/races/new
   def new
@@ -28,8 +36,7 @@ class RacesController < ApplicationController
   end
 
   # GET /rounds/:round_id/races/1/edit
-  def edit
-  end
+  def edit; end
 
   # PATCH/PUT /rounds/:round_id/races/1
   def update
@@ -47,17 +54,18 @@ class RacesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_round
-      @round = Round.find(params[:round_id])
-    end
 
-    def set_race
-      @race = @round.races.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_round
+    @round = Round.find(params[:round_id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def race_params
-      params.require(:race).permit(:round_id, :race_type, :main_category)
-    end
+  def set_race
+    @race = @round.races.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def race_params
+    params.require(:race).permit(:round_id, :race_type, :main_category)
+  end
 end

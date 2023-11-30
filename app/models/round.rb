@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# == Schema Information
 class Round < ApplicationRecord
   # Associations
   belongs_to :tournament

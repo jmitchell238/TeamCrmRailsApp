@@ -1,9 +1,9 @@
 class UserPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.admin?
-        scope.all
-      end
+      return unless user.admin?
+
+      scope.all
     end
   end
 

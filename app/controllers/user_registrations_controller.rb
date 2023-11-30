@@ -1,3 +1,13 @@
+# frozen_string_literal: true
+
+# Controller: UserRegistrationsController
+# Purpose:
+# - Provide a controller for the UserRegistration model
+# - This controller handles the functionality of the UserRegistration portion of the application.
+# File Location:
+# - app/controllers/user_registrations_controller.rb
+# Tests Location:
+# - test/controllers/user_registrations_controller_test.rb
 class UserRegistrationsController < ApplicationController
   def create
     @tournament = Tournament.find(params[:tournament_id])

@@ -1,5 +1,13 @@
-class LapTimesController < ApplicationController
+# frozen_string_literal: true
 
+# Controller: LapTimesController
+# Purpose:
+# - Provide a controller for the LapTime model
+# File Location:
+# - app/controllers/lap_times_controller.rb
+# Tests Location:
+# - test/controllers/lap_times_controller_test.rb
+class LapTimesController < ApplicationController
   before_action :set_lap_time, only: %i[show edit update destroy]
   before_action :set_leaderboard, only: %i[new create]
 
@@ -34,30 +42,27 @@ class LapTimesController < ApplicationController
     @lap_time = LapTime.new(lap_time_params)
 
     if @lap_time.save
-      redirect_to leaderboard_path(@leaderboard), notice: "Lap time successfully created."
+      redirect_to leaderboard_path(@leaderboard), notice: 'Lap time successfully created.'
     else
       render :new
     end
   end
 
   def destroy
-    begin
-      lap_time = LapTime.find(params[:id])
+    lap_time = LapTime.find(params[:id])
 
-      authorize lap_time
+    authorize lap_time
 
-      leaderboard = lap_time.leaderboard
+    leaderboard = lap_time.leaderboard
 
-      puts "Before destruction: #{lap_time.inspect}"
-      lap_time.destroy
-      puts "After destruction: #{lap_time.inspect}"
+    puts "Before destruction: #{lap_time.inspect}"
+    lap_time.destroy
+    puts "After destruction: #{lap_time.inspect}"
 
-      redirect_to leaderboard_path(leaderboard), notice: "Lap time successfully deleted."
-    rescue Pundit::NotAuthorizedError
-      redirect_back(fallback_location: root_path, notice: "You are not authorized to do that.")
-    end
+    redirect_to leaderboard_path(leaderboard), notice: 'Lap time successfully deleted.'
+  rescue Pundit::NotAuthorizedError
+    redirect_back(fallback_location: root_path, notice: 'You are not authorized to do that.')
   end
-
 
   private
 
