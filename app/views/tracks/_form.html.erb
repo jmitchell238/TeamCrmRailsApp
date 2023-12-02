@@ -9,11 +9,6 @@
   </div>
 
   <div class="mb-4">
-    <%= form.label :track_type, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-    <%= form.text_field :track_type, class: 'w-full border p-2 rounded' %>
-  </div>
-
-  <div class="mb-4">
     <%= form.label :track_description, class: 'block text-gray-700 text-sm font-bold mb-2' %>
     <%= form.text_field :track_description, class: 'w-full border p-2 rounded' %>
   </div>
@@ -40,39 +35,36 @@
     <button type="button" id="preview-button" class="bg-gray-300 text-gray-700 py-2 px-4 rounded">Preview</button>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :track_map_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-    <%= form.text_field :track_map_uri, class: 'w-full border p-2 rounded' %>
-  </div>
+<!--  <div class="mb-4">-->
+    <%#= form.label :track_map_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%#= form.text_field :track_map_uri, class: 'w-full border p-2 rounded' %>
+<!--  </div>-->
+
+<!--  <div class="mb-4">-->
+    <%#= form.label :track_video_preview_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <%#= form.text_field :track_video_preview_uri, class: 'w-full border p-2 rounded' %>
+<!--  </div>-->
 
   <div class="mb-4">
-    <%= form.label :track_video_preview_uri, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-    <%= form.text_field :track_video_preview_uri, class: 'w-full border p-2 rounded' %>
-  </div>
-
-  <div class="mb-4">
-    <label class="block text-gray-700 text-sm font-bold mb-2">
-      Selectable Times of Day
-    </label>
-    <% Track.times_of_day_options.each do |option| %>
+    <%= form.label :track_type, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+    <% Track.track_type_options.each do |option| %>
       <label class="inline-flex items-center">
-        <%= check_box_tag 'track[track_times_of_day][]', option, track.track_times_of_day.include?(option), id: dom_id(track, :track_times_of_day_option), class: "form-checkbox text-blue-600" %>
-        <span class="ml-2">
-          <%= label_tag dom_id(track, :track_times_of_day_option), option.capitalize %>
-        </span>
+        <%= form.check_box :track_type, {multiple: false }, option, nil %>
+        <span class="mr-3 ml-2"><%= option.capitalize %></span>
       </label>
     <% end %>
+    <%#= form.text_field :track_type, class: 'w-full border p-2 rounded' %>
   </div>
 
   <div class="mb-4">
     <label class="block text-gray-700 text-sm font-bold mb-2">
-      Selectable Weather Conditions
+      Selectable Track Conditions
     </label>
-    <% Track.weather_conditions_options.each do |option| %>
+    <% Track.track_conditions_options.each do |option| %>
       <label class="inline-flex items-center">
-        <%= check_box_tag 'track[track_weather_conditions][]', option, track.track_weather_conditions.include?(option), id: dom_id(track, :track_weather_conditions_option), class: "form-checkbox text-blue-600" %>
+        <%= check_box_tag 'track[track_conditions][]', option, track.track_conditions.include?(option), id: dom_id(track, :track_weather_conditions_option), class: "form-checkbox text-blue-600" %>
         <span class="ml-2">
-          <%= label_tag dom_id(track, :track_weather_conditions_option), option.capitalize %>
+          <%= label_tag dom_id(track, :track_conditions_option), option.capitalize %>
         </span>
       </label>
     <% end %>

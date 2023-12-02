@@ -10,18 +10,15 @@
             <p><strong>Type:</strong> <%= @track.track_type %></p>
             <p><strong>Description:</strong> <%= @track.track_description %></p>
             <p>
-                <strong>Times of Day:</strong>
-                <%= @track.track_times_of_day.to_sentence(last_word_connector: ', and ') %>
+                <strong>Track Conditions</strong>
+                <%= @track.track_conditions.map(&:capitalize).join(', ') %>
+                <%#= @track.track_conditions.to_sentence(last_word_connector: ', and ') %>
                  <!-- This is a Rails helper method that will take an array and convert it to a sentence. -->
             </p>
-            <p>
-                <strong>Weather Conditions:</strong>
-                <%= @track.track_weather_conditions.to_sentence(last_word_connector: ', and ') %> 
-                <!-- This is a Rails helper method that will take an array and convert it to a sentence. -->
-            </p>
+
             <p><strong>Pack:</strong> <%= @track.track_pack %></p>
-            <p><strong>Map:</strong> <%= @track.track_map_uri %></p>
-            <p><strong>Video Preview:</strong> <%= @track.track_video_preview_uri %></p>
+<!--            <p><strong>Map:</strong> <%#= @track.track_map_uri %></p>-->
+<!--            <p><strong>Video Preview:</strong> <%#= @track.track_video_preview_uri %></p>-->
             
             <div class="flex justify-between mt-4">
                 <% if policy(@track).update? %>
