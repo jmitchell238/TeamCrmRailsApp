@@ -32,7 +32,7 @@
               <%= @leaderboard.track_type.capitalize %>
             </td>
             <td class="px-6 py-4">
-              <%= @leaderboard.track_condition %>
+              <%= @leaderboard.track_condition.capitalize %>
             </td>
             <td class="px-6 py-4">
               <% fastest_lap_time = @leaderboard.lap_times.order('lap_time ASC').first %>

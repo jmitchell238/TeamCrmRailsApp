@@ -17,19 +17,17 @@ class TracksController < ApplicationController
 
   def new
     @track = Track.new
+    @track.track_image_uri ||= "https://p.vitalmx.com/photos/features/8007/title_image/s1600_legends_copy_577031.jpg"
   end
 
   # @return [nil]
   def create
     if current_user.admin?
-      puts 'INSIDE THE CREATE TRACK METHOD'
       @track = Track.new(track_params)
 
       if @track.save
-        puts 'Track saved!'
         redirect_to tracks_path, notice: 'Track was successfully created.'
       else
-        puts 'HIT THE ELSE STATEMENT'
         @errors = @track.errors.full_messages
         puts @errors.inspect
         render :new

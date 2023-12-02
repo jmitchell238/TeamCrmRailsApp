@@ -40,7 +40,7 @@ class Track < ApplicationRecord
   # # There aren't weather Condition options and time of day Options. There are just OPTIONS
   # # Options are Morning, Afternoon, Night, Rainy
   def self.track_conditions_options
-    %w[morning afternoon night rainy]
+    %w[clear rainy]
   end
 
   private
