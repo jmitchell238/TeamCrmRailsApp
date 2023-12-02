@@ -12,17 +12,6 @@
         </div>
 
         <div class="mb-4">
-          <%= form.label :track_type, class: 'block text-gray-700 text-sm font-bold mb-2'  %>
-
-          <% Track.track_type_options.each do |option| %>
-            <label class="inline-flex items-center">
-              <%= form.check_box :track_type, {multiple: false }, option, nil %>
-              <span class="mr-3 ml-2"><%= option.capitalize %></span>
-            </label>
-          <% end %>
-        </div>
-
-        <div class="mb-4">
             <%= form.label :track_description %>
             <%= form.text_field :track_description, class: 'w-full border p-2 rounded' %>
         </div>
@@ -35,6 +24,17 @@
         <div class="mb-4">
             <%= form.label :track_image_uri %>
             <%= form.text_field :track_image_uri, class: 'w-full border p-2 rounded' %>
+        </div>
+
+        <div class="mb-4">
+          <%= form.label :track_type, class: 'block text-gray-700 text-sm font-bold mb-2'  %>
+
+          <% Track.track_type_options.each do |option| %>
+            <label class="inline-flex items-center">
+              <%= form.check_box :track_type, {multiple: false }, option, nil %>
+              <span class="mr-3 ml-2"><%= option.capitalize %></span>
+            </label>
+          <% end %>
         </div>
 
         <div class="mb-4">
