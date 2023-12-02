@@ -3,15 +3,48 @@
 <!-- _leaderboard.html.erb -->
 
 <!-- Your leaderboards section content -->
-<div>
-  <% if @leaderboard.present? %>
-    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 shadow border border-gray-200 bg-gray-100 mb-4 mx-2">
-      <%= link_to track_leaderboard_path(@leaderboard.track, @leaderboard), class: "block font-bold mb-2 text-xl", method: :get do %>
-        🏁 <%= @leaderboard.track.track_name %>
-      <% end %>
-      <div><strong>Condition:</strong> <%= @leaderboard.track_condition %></div>
+<% if @leaderboard.present? %>
+    <div class="relative overflow-x-auto shadow-lg rounded-lg bg-white border border-gray-200">
+      <table class="w-full rounded-bl-lg text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <caption class="p-5 text-lg font-semibold text-center rtl:text-right text-gray-900 dark:text-white dark:bg-gray-800">
+          <p class="text-xl font-bold mb-4">🏁 <%= @leaderboard.track_name.capitalize %></p>
+        </caption>
+        <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Track Type
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Condition
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Fastest Lap
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Gamer Tag
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white dark:bg-gray-800 rounded-b-lg">
+            <td class="px-6 py-4">
+              <%= @leaderboard.track_type.capitalize %>
+            </td>
+            <td class="px-6 py-4">
+              <%= @leaderboard.track_condition %>
+            </td>
+            <td class="px-6 py-4">
+              <% fastest_lap_time = @leaderboard.lap_times.order('lap_time ASC').first %>
+              <%= fastest_lap_time&.lap_time.present? ? fastest_lap_time.formatted_lap_time : 'No lap time recorded' %>
+            </td>
+            <td class="px-6 py-4">
+              <% fastest_lap_time = @leaderboard.lap_times.order('lap_time ASC').first %>
+              <%= fastest_lap_time&.user&.gamer_tag.present? ? fastest_lap_time.user.gamer_tag : 'No gamer tag recorded' %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  <% else %>
-    <p class="w-full text-center">No leaderboard entries found.</p>
-  <% end %>
-</div>
+<% else %>
+  <p class="w-full text-center">No leaderboard entries found.</p>
+<% end %>

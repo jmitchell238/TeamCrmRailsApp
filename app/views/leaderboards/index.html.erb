@@ -7,26 +7,29 @@
 
   <!-- Advanced filters form -->
   <div class="flex flex-col items-center w-full mb-4 px-4">
-    <%= form_with(url: leaderboards_path, method: :get, id: 'leaderboard_form', local: true) do |form| %>
+    <%= form_with(url: leaderboards_path, method: :get, id: 'leaderboard_form', local: true) do |_| %>
       <div class="flex flex-col items-center space-y-5">
         <%= select_tag('track_type', options_for_select(Track.track_type_options.map { |option| [option.capitalize, option] }), {
-          class: "bg-white mb-4 block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500",
+          class: "bg-white block w-full px-4 py-3 text-base text-center text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500",
           include_blank: 'Select Track Type',
           id: 'track_type_select',
+          style: 'background-color: #ffffff'
         }) %>
 
         <%= select_tag('track_name', options_for_select([]), {
-          class: "mb-4 block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 text-gray-500",
+          class: "block w-full px-4 py-3 text-base text-center text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500",
           include_blank: 'Select Track',
           id: 'leaderboards_by_track_name_select',
-          disabled: true
+          disabled: true,
+          style: 'background-color: #e2e8f0;'
         }) %>
 
         <%= select_tag('track_conditions', options_for_select([]), {
-          class: "mb-4 block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 text",
+          class: "block w-full px-4 py-3 text-base text-center text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500",
           include_blank: 'Select Track Condition',
           id: 'track_condition_select',
-          disabled: true
+          disabled: true,
+          style: 'background-color: #e2e8f0;'
         }) %>
 
         <%= submit_tag('Search', {
@@ -37,9 +40,6 @@
       </div>
     <% end %>
   </div>
-
-
-
 
   <!-- Leaderboards table -->
   <div id="leaderboards-container" style="display: none;">
@@ -61,7 +61,11 @@
       // Enable the next dropdown based on the current selection
       const enableSelect = (selectElement, enable) => {
         selectElement.disabled = !enable;
-        if (!enable) selectElement.innerHTML = '';
+        if (!enable) {
+            selectElement.innerHTML = '';
+        } else {
+            selectElement.style.backgroundColor = 'white';
+        }
       };
 
           // Listen to Turbo Stream events when updates to the 'track_name_select' occur
