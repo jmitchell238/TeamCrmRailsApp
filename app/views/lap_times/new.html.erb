@@ -3,7 +3,7 @@
 <%= render 'leaderboards/leaderboard_breadcrumbs' %>
 
 <div class="flex flex-wrap justify-center">
-  <h1 class="font-bold text-2xl mb-4 w-full text-center"><%= @leaderboard.track.track_name %> - <%= @leaderboard.weather_condition %> - <%= @leaderboard.time_of_day %></h1>
+  <h1 class="font-bold text-2xl mb-4 w-full text-center"><%= @leaderboard.track.track_name %> - <%= @leaderboard.track_condition %></h1>
   <p class="w-full text-center mb-4">Add Your Fast Lap Time</p>
 
 <!-- Lap Time form -->
@@ -21,7 +21,7 @@
         <label for="leaderboard_id" class="text-sm font-medium">Track</label>
         <div class="flex items-center space-x-1">
           <span class="font-semibold text-gray-800">
-            <%= @leaderboard.track.track_name %> - <%= @leaderboard.weather_condition %> - <%= @leaderboard.time_of_day %>
+            <%= @leaderboard.track.track_name %> - <%= @leaderboard.track_condition %>
           </span>
           <%= form.hidden_field :leaderboard_id, value: @lap_time.leaderboard.id %>
         </div>

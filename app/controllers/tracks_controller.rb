@@ -17,24 +17,24 @@ class TracksController < ApplicationController
 
   def new
     @track = Track.new
-    @track.track_image_uri ||= "https://p.vitalmx.com/photos/features/8007/title_image/s1600_legends_copy_577031.jpg"
+    # @track.track_image_uri ||= "https://p.vitalmx.com/photos/features/8007/title_image/s1600_legends_copy_577031.jpg"
   end
 
   # @return [nil]
   def create
-    if current_user.admin?
-      @track = Track.new(track_params)
+    authorize Track.new
+    @track = Track.new(track_params)
 
-      if @track.save
-        redirect_to tracks_path, notice: 'Track was successfully created.'
-      else
-        @errors = @track.errors.full_messages
-        puts @errors.inspect
-        render :new
-      end
+    if @track.save
+      redirect_to tracks_path, notice: 'Track was successfully created.'
     else
-      redirect_to tracks_path, notice: 'You are not authorized to do that.'
+      @errors = @track.errors.full_messages
+      puts @errors.inspect
+      render :new
     end
+
+  rescue Pundit::NotAuthorizedError
+    redirect_back(fallback_location: root_path, notice: 'You are not authorized to do that.')
   end
 
   def show
@@ -81,10 +81,6 @@ class TracksController < ApplicationController
       :track_description,
       :track_pack,
       :track_image_uri,
-      :track_map_uri,
-      :track_video_preview_uri,
-      track_times_of_day: [],
-      track_weather_conditions: [],
       track_conditions: []
     )
   end

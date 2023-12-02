@@ -62,7 +62,7 @@
     </label>
     <% Track.track_conditions_options.each do |option| %>
       <label class="inline-flex items-center">
-        <%= check_box_tag 'track[track_conditions][]', option, track.track_conditions.include?(option), id: dom_id(track, :track_weather_conditions_option), class: "form-checkbox text-blue-600" %>
+        <%= check_box_tag 'track[track_conditions][]', option, track.track_conditions.include?(option), id: dom_id(track, :track_conditions_option), class: "form-checkbox text-blue-600" %>
         <span class="ml-2">
           <%= label_tag dom_id(track, :track_conditions_option), option.capitalize %>
         </span>

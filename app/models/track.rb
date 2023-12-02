@@ -16,25 +16,11 @@ class Track < ApplicationRecord
   validates :track_map_uri, presence: false
   validates :track_video_preview_uri, presence: false
 
-  # Commenting these out for now because they are not being used
-  # validates :track_weather_conditions, presence: true
-  # validates :track_times_of_day, presence: true
-
   after_create :create_leaderboards_for_conditions
 
   # Class method to provide options for Track Type
   def self.track_type_options
     %w[supercross national]
-  end
-
-  # Class method to provide options for weather conditions
-  def self.weather_conditions_options
-    %w[clear rain wet]
-  end
-
-  # Class method to provide options for times of day
-  def self.times_of_day_options
-    %w[morning afternoon night]
   end
 
   # # There aren't weather Condition options and time of day Options. There are just OPTIONS
@@ -46,11 +32,17 @@ class Track < ApplicationRecord
   private
 
   def create_leaderboards_for_conditions
+    puts 'Creating leaderboards for track'
+    puts inspect
+    puts id
+    puts track_type
+    puts track_conditions.inspect
     track_conditions.each do |condition|
       leaderboards.create!(
         track_id: id,
+        track_name: track_name,
         track_condition: condition,
-        track_type:
+        track_type: track_type
       )
     end
   end
