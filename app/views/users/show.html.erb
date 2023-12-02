@@ -3,30 +3,29 @@
 <%= render 'users/userbreadcrumbs' %>
 
 <div class="flex items-center justify-center pt-8">
-    <div class="p-8 bg-white shadow-lg rounded-md outline outline-1 outline-gray-300">
-        <h2 class="text-2xl font-bold underline text-gray-700 text-center pb-4">Profile - <%= @user.gamer_tag %></h2>
+  <div class="p-8 bg-white shadow-lg rounded-md outline outline-1 outline-gray-300">
+    <h2 class="text-2xl font-bold underline text-gray-700 text-center pb-4">Profile - <%= @user.gamer_tag %></h2>
 
-        <div class="mb-4 w-full">
+    <div class="mb-4 w-full">
+      <p class="block text-gray-700 text-sm font-bold mt-2">Gamer Tag:</p>
+      <p class="w-full p-2 rounded"><%= @user.gamer_tag %></p>
 
-            <p class="block text-gray-700 text-sm font-bold mt-2">Gamer Tag:</p>
-            <p class="w-full p-2 rounded"><%= @user.gamer_tag %></p>
+      <p class="block text-gray-700 text-sm font-bold mt-2">Email:</p>
+      <p class="w-full p-2 rounded"><%= @user.email %></p>
 
-            <p class="block text-gray-700 text-sm font-bold mt-2">Email:</p>
-            <p class="w-full p-2 rounded"><%= @user.email %></p>
+      <p class="block text-gray-700 text-sm font-bold mt-2">Admin:</p>
+      <% if @user.admin? %>
+        <p class="w-full p-2 rounded">Yes</p>
+      <% else %>
+        <p class="w-full p-2 rounded">No</p>
+      <% end %>
 
-            <p class="block text-gray-700 text-sm font-bold mt-2">Admin:</p>
-            <% if @user.admin? %>
-                <p class="w-full p-2 rounded">Yes</p>
-            <% else %>
-                <p class="w-full p-2 rounded">No</p>
-            <% end %>
+      <p class="block text-gray-700 text-sm font-bold mt-2">Team Roles:</p>
+      <p class="w-full p-2 mb-8 rounded"><%= @user.roles.reject { |role| role == 'admin' }.map(&:capitalize).join(', ') %></p>
 
-            <p class="block text-gray-700 text-sm font-bold mt-2">Team Roles:</p>
-            <p class="w-full p-2 mb-8 rounded"><%= @user.roles_list %></p>
-
-            <% if policy(@user).edit? %>
-                <%= link_to "Edit Profile", edit_user_path(@user), class: "mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
-            <% end %>
-        </div>
+      <% if policy(@user).edit? %>
+        <%= link_to "Edit Profile", edit_user_path(@user), class: "mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
+      <% end %>
     </div>
+  </div>
 </div>
