@@ -30,6 +30,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :user_signed_in?
 
+  def user_is_admin?
+    current_user.admin?
+  end
+  helper_method :user_is_admin?
+
   def login(user)
     Current.user = user
     reset_session

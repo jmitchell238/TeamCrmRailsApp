@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   root 'main#index'
 
@@ -9,6 +11,7 @@ Rails.application.routes.draw do
   resource :password_reset, only: %i[new create edit update]
   resource :password, only: %i[edit update]
   resource :member_portal, only: [:show]
+  resource :admin_portal, only: [:show]
 
   # If user_registrations need nested resources or member/collection routes, they can be added here
   resources :user_registrations

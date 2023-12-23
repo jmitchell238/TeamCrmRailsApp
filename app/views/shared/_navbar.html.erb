@@ -11,21 +11,21 @@
 </div>
 
 <script>
-  document.addEventListener("turbo:load", function() {
+    document.addEventListener("turbo:load", function() {
     // Function to toggle menus based on screen width
     function toggleMenus() {
-      const desktopMenu = document.querySelector(".desktop-menu");
-      const mobileMenu = document.querySelector(".mobile-menu");
+        const desktopMenu = document.querySelector(".desktop-menu");
+        const mobileMenu = document.querySelector(".mobile-menu");
 
-      if (window.innerWidth < 768) {
-        // Show mobile menu and hide desktop menu
-        desktopMenu.classList.add("hidden");
-        mobileMenu.classList.remove("hidden");
-      } else {
-        // Show desktop menu and hide mobile menu
-        desktopMenu.classList.remove("hidden");
-        mobileMenu.classList.add("hidden");
-      }
+        if (window.innerWidth < 768) {
+            // Show mobile menu and hide desktop menu
+            desktopMenu.classList.add("hidden");
+            mobileMenu.classList.remove("hidden");
+        } else {
+            // Show desktop menu and hide mobile menu
+            desktopMenu.classList.remove("hidden");
+            mobileMenu.classList.add("hidden");
+        }
     }
 
     // Initial toggle on page load
@@ -33,5 +33,60 @@
 
     // Toggle menus on window resize
     window.addEventListener("resize", toggleMenus);
-  });
+
+    // Event listener for admin section mobile
+    const adminMenuToggle = document.getElementById('admin_menu_toggle_mobile');
+    if (adminMenuToggle) {
+        adminMenuToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleMenu('admin_menu_mobile');
+    });
+    } else {
+        console.log('Admin menu toggle element not found!');
+    }
+
+    // Event listener for user section mobile
+    const userMenuToggle = document.getElementById('user_menu_toggle_mobile');
+    if (userMenuToggle) {
+        userMenuToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleMenu('user_menu_mobile');
+    });
+    } else {
+        console.log('User menu toggle element not found!');
+    }
+
+    // Event listener for admin section mobile
+    const adminMenuToggleDesktop = document.getElementById('admin_menu_toggle_desktop');
+    if (adminMenuToggleDesktop) {
+        adminMenuToggleDesktop.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleMenu('admin_menu_desktop');
+        });
+    } else {
+        console.log('Admin menu toggle element not found!');
+    }
+
+    // Event listener for user section mobile
+    const userMenuToggleDesktop = document.getElementById('user_menu_toggle_desktop');
+    if (userMenuToggleDesktop) {
+        userMenuToggleDesktop.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleMenu('user_menu_desktop');
+        });
+    } else {
+        console.log('User menu toggle element not found!');
+    }
+
+    // Function to toggle user/admin menu
+    function toggleMenu(menuId) {
+        const menu = document.getElementById(menuId);
+        menu.classList.toggle('hidden');
+    }
+});
+
 </script>
