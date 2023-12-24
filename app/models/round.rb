@@ -13,7 +13,7 @@ class Round < ApplicationRecord
   # Add any validations needed for rounds here.
 
   # Callbacks
-  after_create :create_initial_races
+  # after_create :create_initial_races
   # You might have callbacks to automatically create races when a round is created.
 
   # Scopes
@@ -28,4 +28,12 @@ class Round < ApplicationRecord
   def calculate_scores
     # Logic to calculate and update scores after races are finished.
   end
+
+  # def create_initial_races
+  #   # Your logic to create initial races for the round goes here
+  #   # For example:
+  #   (1..number_of_races).each do |race_number|
+  #     races.create(number: race_number, name: "Race #{race_number}")
+  #   end
+  # end
 end

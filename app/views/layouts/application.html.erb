@@ -53,6 +53,10 @@
           alert.classList.add('hidden');
         }
       });
+
+      // Set user_time_zone cookie based on the browser's time zone
+      var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      document.cookie = "user_time_zone=" + userTimeZone;
     </script>
   </body>
 </html>

@@ -13,4 +13,15 @@
         <li>Register for upcoming tournaments</li>
         <li>View tournament results</li>
     </ul>
+
+  <h1 class="text-2xl font-bold underline text-gray-700 text-center pt-4">ALL TOURNAMENTS</h1>
+  <ul class="list-disc list-inside">
+    <% @tournaments.each do |tournament| %>
+      <li class="text-center"><%= link_to tournament.name, tournament_path(tournament) %></li>
+    <% end %>
+  </ul>
+
+  <div class="flex justify-center pt-4">
+        <%= link_to 'Add New Tournament', new_tournament_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
 </div>

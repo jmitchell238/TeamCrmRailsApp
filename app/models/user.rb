@@ -2,9 +2,9 @@
 
 # == Schema Information
 class User < ApplicationRecord
-  # User has many registrations for different tournaments
+  has_many :owned_tournaments, class_name: 'Tournament', foreign_key: 'user_id', dependent: :destroy
   has_many :user_registrations, dependent: :destroy
-  has_many :tournaments, through: :user_registrations
+  has_many :registered_tournaments, through: :user_registrations, source: :tournament
 
   # User has many race participations through their registrations
   has_many :race_participations, through: :user_registrations
@@ -43,6 +43,15 @@ class User < ApplicationRecord
   def remove_roles(*old_roles)
     self.roles -= old_roles.map(&:to_s) # Remove the specified roles from the array
   end
+
+  def time_zone
+    ActiveSupport::TimeZone[user_time_zone] || 'UTC'
+  end
+
+  def time_zone_offset
+    ActiveSupport::TimeZone[time_zone].formatted_offset
+  end
+
 
   # generates_token_for :email_confirmation, expires_in: 24.hours do
   #   email

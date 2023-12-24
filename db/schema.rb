@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_02_223756) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_24_005816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,11 +58,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_02_223756) do
 
   create_table "rounds", force: :cascade do |t|
     t.bigint "tournament_id", null: false
-    t.bigint "track_id", null: false
+    t.bigint "track_id"
     t.string "name"
     t.integer "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "round_date", null: false
     t.index ["tournament_id"], name: "index_rounds_on_tournament_id"
     t.index ["track_id"], name: "index_rounds_on_track_id"
   end
@@ -73,6 +74,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_02_223756) do
     t.datetime "start_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "number_of_rounds", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_tournaments_on_user_id"
   end
 
   create_table "tracks", force: :cascade do |t|
@@ -126,6 +130,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_02_223756) do
   add_foreign_key "races", "rounds"
   add_foreign_key "rounds", "tournaments"
   add_foreign_key "rounds", "tracks"
+  add_foreign_key "tournaments", "users"
   add_foreign_key "user_registrations", "tournaments"
   add_foreign_key "user_registrations", "users"
   add_foreign_key "user_scores", "rounds"
