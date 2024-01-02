@@ -1,0 +1,69 @@
+<!--BreadCrumbs go here-->
+
+<div class="mt-8 flex items-center justify-center">
+  <div class="pg-8 shadow-md rounded-md bg-white w-2/3">
+    <h1 class="font-bold text-2xl mb-4">Edit Round</h1>
+
+      <%= form_with model: @round, url: round_path, class: "w-2xl" do |form| %>
+
+      <% if form.object.errors.any? %>
+        <% form.object.errors.full_messages.each do |message| %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Holy smokes Batman!</strong>
+            <span class="block sm:inline"> <%= message %></span>
+          </div>
+        <% end %>
+      <% end %>
+
+      <div class="mb-4 w-full">
+        <%= form.label :name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+        <%= form.text_field :name, class: 'w-full border p-2 rounded' %>
+      </div>
+
+      <div class="mb-4 w-full">
+        <%= form.label :round_date, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+        <%= form.date_field :round_date, class: 'w-full border p-2 rounded' %>
+      </div>
+
+      <div class="mb-4 w-full">
+        <%= form.label :track_id, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+        <%= form.collection_select :track_id, Track.all, :id, :track_name, {prompt: "Select Track"}, {class: 'w-full border p-2 rounded'} %>
+      </div>
+
+      <div class="mb-4">
+        <%= form.submit 'Update Round', class: 'bg-blue-500 text-white py-2 px-4 rounded' %>
+      </div>
+    <% end %>
+
+    <%= form_with(model: [@tournament, @round], local: true) do %>
+      <% if @round.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@round.errors.count, "error") %> prohibited this round from being saved:</h2>
+
+          <ul>
+            <% @round.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    <% end %>
+
+
+    <h1 class="font-bold text-2xl mb-4">Close / Open Registration</h1>
+    <p class="mb-4">Close or Open registration for this round.</p>
+    <p class="mb-4">Registration is currently <strong><% if @round.registration_open? %>OPEN<% else %>CLOSED<% end %></strong></p>
+    <div class="flex flex-wrap -mx-3 mb-6">
+      <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="button">
+          Open Registration
+        </button>
+      </div>
+      <div class="w-full md:w-1/2 px-3">
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" type="button">
+          Close Registration
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

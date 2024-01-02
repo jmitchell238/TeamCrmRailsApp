@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   root 'main#index'
 
   resources :tracks
+  resources :rounds
+  resources :races
   resources :users
 
   resource :session, only: %i[new create destroy]
@@ -24,6 +26,15 @@ Rails.application.routes.draw do
     end
     collection do
       get :ongoing
+    end
+
+    resources :rounds do
+      member do
+        patch 'update_registration_status'
+        post 'register'
+        delete 'unregister'
+        delete 'remove_user_registration/:user_registration_id', to: 'rounds#remove_user_registration', as: :remove_user_registration
+      end
     end
   end
 

@@ -4,6 +4,8 @@
 class UserRegistration < ApplicationRecord
   belongs_to :user
   belongs_to :tournament
+  belongs_to :round
+
   has_many :race_participations
 
   # ...

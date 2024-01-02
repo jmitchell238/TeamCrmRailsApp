@@ -13,6 +13,11 @@ class TracksController < ApplicationController
 
   def index
     @tracks = Track.all
+    if authorize @tracks
+      @tracks
+    else
+      redirect_to root_path, notice: 'You are not authorized to do that.'
+    end
   end
 
   def new

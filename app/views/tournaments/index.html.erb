@@ -21,7 +21,9 @@
     <% end %>
   </ul>
 
-  <div class="flex justify-center pt-4">
-        <%= link_to 'Add New Tournament', new_tournament_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-  </div>
+  <% if policy(@tournaments).new? %>
+    <div class="flex justify-center pt-4 mb-16">
+      <%= link_to 'Add New Tournament', new_tournament_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+  <% end %>
 </div>

@@ -1,18 +1,12 @@
-class TrackPolicy < ApplicationPolicy
+# frozen_string_literal: true
+
+class RoundPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       return unless user.admin?
 
       scope.all
     end
-  end
-
-  def index?
-    user.present? && user.admin?
-  end
-
-  def show?
-    user.present? && user.admin?
   end
 
   def update?
@@ -26,4 +20,5 @@ class TrackPolicy < ApplicationPolicy
   def destroy?
     user.present? && user.admin?
   end
+
 end

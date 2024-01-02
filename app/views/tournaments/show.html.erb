@@ -2,25 +2,86 @@
 
 <%= render 'tournaments/tournament_breadcrumbs' %>
 
-<div class="max-w-6xl mx-auto mt-8 p-4 border border-gray-300 shadow-md">
+<div class="max-w-6xl mx-auto mt-8 mb-8 p-4 border border-gray-300 shadow-md">
   <div class="flex">
     <div class="w-2/3 pr-8">
       <h1 class="text-2xl font-bold mb-4 underline"><%= @tournament.name %></h1>
+      <h2 class="text-xl font-bold mb-4">Rounds: <%= @tournament.rounds.count %></h2>
 
-      <p><strong>Description:</strong> <%= @tournament.description %></p>
-      <p><strong>Start Date:</strong> <%= @tournament.start_date.in_time_zone(@user_time_zone).strftime('%B %e, %Y - Time: %l:%M %p %Z') %></p>
+      <!-- ... other details ... -->
 
+      <p>
+        <strong>
+          Start Date:
+        </strong>
+        <%= @tournament.start_date.in_time_zone(@user_time_zone).strftime('%B %e, %Y - Time: %l:%M %p %Z') %>
+      </p>
 
-
-
-      <ul>
-        <% @tournament.rounds.each do |round| %>
-          <li>
-            <p><strong>Round Number: </strong><%= round.number %></p>
-            <%= link_to round.name, round %>
-          </li>
+      <div class="mt-8">
+        <% if @tournament.next_round %>
+          <p class="">
+            <strong>Next Round:</strong>
+          </p>
+          <p>
+            <%= link_to "Round #{@tournament.next_round.number}", tournament_round_path(@tournament, @tournament.next_round), class: "text-sky-800 underline" %>
+          </p>
+          <p>
+            Location:
+            <% if @tournament.next_round.track_id %>
+              <%= link_to "#{Track.find(@tournament.next_round.track_id).track_name}", tournament_round_path(@tournament, @tournament.next_round), class: "text-sky-800 underline" %>
+            <% else %>
+              <%= link_to "TBD", @tournament.next_round, class: "text-sky-800 underline" %>
+            <% end %>
+          </p>
+          <p>
+            Date:
+            <%= link_to " #{round_date_format(@tournament.next_round.round_date)}", tournament_round_path(@tournament, @tournament.next_round), class: "text-sky-800 underline" %>
+          </p>
+          <p>
+            Time:
+            <%= link_to " #{round_time_format(@tournament.next_round.round_date)}", tournament_round_path(@tournament, @tournament.next_round), class: "text-sky-800 underline" %>
+          </p>
+        <% else %>
+          No upcoming rounds
         <% end %>
-      </ul>
+      </div>
+
+      <div class="mt-4">
+        <strong>Previous Rounds:</strong>
+        <label for="previous-rounds">Previous Rounds:</label>
+        <select id="previous-rounds" onchange="window.location.href=this.value">
+          <% if @tournament.rounds.any? { |round| round.round_date < Time.now } %>
+            <% @tournament.rounds.each do |round| %>
+                <% if round.round_date < Time.now %>
+                <option value="<%= tournament_round_path(@tournament, round) %>">
+                  Round <%= round.number %> - <%= round_display_text(round) %>
+                  </option>
+                <% end %>
+              <% end %>
+          <% else %>
+            <option value="#">No previous rounds</option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="mt-4">
+        <strong>Upcoming Rounds:</strong>
+        <label for="upcoming-rounds">Upcoming Rounds:</label>
+        <select id="upcoming-rounds" onchange="window.location.href=this.value">
+          <% if @tournament.rounds.any? { |round| round.round_date > Time.now } %>
+            <% @tournament.rounds.each do |round| %>
+                <% if round.round_date > Time.now %>
+                  <option value="<%= tournament_round_path(@tournament, round) %>">
+                    Round <%= round.number %> - <%= round_display_text(round) %>
+                  </option>
+                <% end %>
+              <% end %>
+          <% else %>
+            <option value="#">No upcoming rounds</option>
+          <% end %>
+        </select>
+      </div>
+
       <div class="flex justify-between mt-4">
         <% if policy(@tournament).update? %>
           <%= link_to 'Edit Tournament', edit_tournament_path(@tournament), class: 'text-blue-500 underline' %>
@@ -30,6 +91,18 @@
           <%= link_to 'Delete Tournament', @tournament, method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-500 underline' %>
         <% end %>
       </div>
+
     </div>
   </div>
 </div>
+
+<%# Add the following JavaScript code to enhance the dropdown functionality %>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll("select").forEach(function(select) {
+            select.addEventListener("change", function() {
+                window.location.href = this.value;
+            });
+        });
+    });
+</script>

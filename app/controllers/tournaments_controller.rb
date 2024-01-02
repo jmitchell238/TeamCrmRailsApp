@@ -19,7 +19,8 @@ class TournamentsController < ApplicationController
 
   def show
     @tournament = Tournament.find(params[:id])
-    @user_time_zone = Time.find_zone(cookies[:user_time_zone]) || 'UTC'  end
+    @user_time_zone = Time.find_zone(cookies[:user_time_zone]) || 'UTC'
+  end
 
   def new
     @tournament = Tournament.new
@@ -30,9 +31,7 @@ class TournamentsController < ApplicationController
   def create
     @tournament = Tournament.new(tournament_params)
     @tournament.user_id = current_user.id
-    puts "Start Date before save: #{params[:tournament][:start_date].to_datetime}"
     @tournament.start_date = params[:tournament][:start_date].in_time_zone(cookies[:user_time_zone] || 'UTC')
-    puts "Start Date after save: #{@tournament.start_date}"
     if @tournament.save
       redirect_to @tournament, notice: 'Tournament was successfully created.'
     else
@@ -54,6 +53,31 @@ class TournamentsController < ApplicationController
     @tournament.destroy
     redirect_to tournaments_url, notice: 'Tournament was successfully destroyed.'
   end
+
+  def round_datetime_format(datetime)
+    # round.round_date.in_time_zone(@user_time_zone).strftime('%B %e, %Y - Time: %l:%M %p %Z')
+    datetime.in_time_zone(@user_time_zone).strftime('%B %e, %Y - Time: %l:%M %p %Z')
+  end
+  helper_method :round_datetime_format
+
+  def round_date_format(datetime)
+    datetime.in_time_zone(@user_time_zone).strftime('%B %e, %Y')
+  end
+  helper_method :round_date_format
+
+  def round_time_format(datetime)
+    datetime.in_time_zone(@user_time_zone).strftime('%l:%M %p %Z')
+  end
+  helper_method :round_time_format
+
+  def round_display_text(round)
+    if round.track_id
+      round.track.track_name
+    else
+      'TBD'
+    end
+  end
+  helper_method :round_display_text
 
   private
 

@@ -5,19 +5,14 @@ class User < ApplicationRecord
   has_many :owned_tournaments, class_name: 'Tournament', foreign_key: 'user_id', dependent: :destroy
   has_many :user_registrations, dependent: :destroy
   has_many :registered_tournaments, through: :user_registrations, source: :tournament
-
-  # User has many race participations through their registrations
   has_many :race_participations, through: :user_registrations
   has_many :races, through: :race_participations
-
   attribute :roles, :string, array: true, default: []
-
-  has_secure_password
-
   validates :email, presence: true, uniqueness: true
-  normalizes :email, with: ->(email) { email.strip.downcase }
-
   validates :gamer_tag, presence: true, uniqueness: true
+
+  normalizes :email, with: ->(email) { email.strip.downcase }
+  has_secure_password
 
   generates_token_for :password_reset, expires_in: 15.minutes do
     password_salt&.last(10)
@@ -52,6 +47,9 @@ class User < ApplicationRecord
     ActiveSupport::TimeZone[time_zone].formatted_offset
   end
 
+  def registered_for_round?(round)
+    user_registrations.exists?(round:)
+  end
 
   # generates_token_for :email_confirmation, expires_in: 24.hours do
   #   email

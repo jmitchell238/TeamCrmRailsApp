@@ -17,7 +17,9 @@ class RacesController < ApplicationController
   end
 
   # GET /rounds/:round_id/races/1
-  def show; end
+  def show
+    @race = Race.find(params[:id])
+  end
 
   # GET /rounds/:round_id/races/new
   def new

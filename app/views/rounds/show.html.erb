@@ -1,0 +1,73 @@
+<!-- app/views/rounds/show.html.erb -->
+
+<div class="max-w-6xl mx-auto mt-8 mb-8 p-4 border border-gray-300 shadow-md">
+  <div class="flex flex-col md:flex-row"> <!-- Use flex to arrange content in a row on medium screens and above -->
+    <div class="w-full md:w-2/3 pr-8">
+      <h1 class="text-2xl font-bold mb-4 underline">Round: <%= @round.number %></h1>
+      <h2 class="text-xl font-bold mb-4">Date: <%= round_date_format(@round.round_date) %></h2>
+      <h2 class="text-xl font-bold mb-4">Time: <%= round_time_format(@round.round_date) %></h2>
+      <h2 class="text-xl font-bold mb-4"> Track:
+        <% if @round.track_id %>
+          <%= @track.track_name %>
+        <% else %>
+          Track not set
+        <% end %>
+      </h2>
+      <h3 class="text-xl font-bold mb-4">Tournament: <%= @tournament.name %></h3>
+
+      <% if policy(@round).update? %>
+        <%= link_to 'Edit', edit_round_path(@round), class: 'text-sky-800 underline' %>
+      <% end %>
+
+      <% if @round.registration_open %>
+        <div class="mt-8">
+          <h1 class="text-2xl font-bold mb-4 underline">Registration</h1>
+
+          <% if current_user && !current_user.registered_for_round?(@round) %>
+            <%= link_to 'Register', register_tournament_round_path(@tournament, @round), method: :post, class: 'text-sky-800 underline' %>
+          <% elsif current_user && current_user.registered_for_round?(@round) %>
+            <%= link_to 'Unregister', unregister_tournament_round_path(@tournament, @round), method: :delete, class: 'text-sky-800 underline' %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Move the Registered Players section to a new column on medium screens and above -->
+    <div class="md:w-1/3 mt-8 md:mt-0">
+      <h1 class="text-2xl font-bold mb-4 underline">Registered Players</h1>
+
+      <h1 class="text-xl font-bold mb-4">Users: <%= @round.user_registrations.count %></h1>
+      <% if @round.user_registrations.count > 0 %>
+        <ul>
+          <% @round.user_registrations.each do |user_registration| %>
+            <li>
+              <p class="text-lg font-bold mb-4">
+                - <%= user_registration.user.gamer_tag %>
+              -
+              <% if user_is_admin? %>
+                <%= link_to 'Remove', remove_user_registration_tournament_round_path(@tournament, @round, user_registration), method: :delete, class: 'text-sky-800 underline', data: { confirm: 'Are you sure you want to remove this user?' } %>
+              <% end %>
+              </p>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No users registered</p>
+      <% end %>
+    </div>
+
+    <!-- Add another block to allow the Tournament owner or admin to Close / Open registration -->
+    <div class="md:w-1/3 mt-8 md:mt-0">
+      <h1 class="font-bold text-2xl mb-4">Close / Open Registration</h1>
+      <p class="mb-4">Close or Open registration for this round.</p>
+      <p class="mb-4" id="registration-status">Registration is currently <strong><%= @round.registration_open? ? 'OPEN' : 'CLOSED' %></strong></p>
+      <% if @round.registration_open %>
+        <%= button_to 'Close Registration', update_registration_status_tournament_round_path(@tournament, @round, registration_status: false), method: :patch, remote: true, class: 'text-sky-800 underline' %>
+      <% else %>
+        <%= button_to 'Open Registration', update_registration_status_tournament_round_path(@tournament, @round, registration_status: true), method: :patch, remote: true, class: 'text-sky-800 underline' %>
+      <% end %>
+    </div>
+
+
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_24_005816) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_24_103443) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,12 +47,19 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_005816) do
     t.index ["user_registration_id"], name: "index_race_participations_on_user_registration_id"
   end
 
+  create_table "race_sets", force: :cascade do |t|
+    t.bigint "round_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "races", force: :cascade do |t|
     t.bigint "round_id", null: false
     t.string "race_type", null: false
     t.string "main_category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "race_set_id"
     t.index ["round_id"], name: "index_races_on_round_id"
   end
 
@@ -64,6 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_005816) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "round_date", null: false
+    t.boolean "registration_open", default: true
     t.index ["tournament_id"], name: "index_rounds_on_tournament_id"
     t.index ["track_id"], name: "index_rounds_on_track_id"
   end
@@ -97,6 +105,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_005816) do
     t.bigint "tournament_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "round_id"
+    t.index ["round_id"], name: "index_user_registrations_on_round_id"
     t.index ["tournament_id"], name: "index_user_registrations_on_tournament_id"
     t.index ["user_id", "tournament_id"], name: "index_user_registrations_on_user_id_and_tournament_id", unique: true
     t.index ["user_id"], name: "index_user_registrations_on_user_id"
@@ -127,10 +137,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_005816) do
   add_foreign_key "leaderboards", "tracks"
   add_foreign_key "race_participations", "races"
   add_foreign_key "race_participations", "user_registrations"
+  add_foreign_key "race_sets", "rounds"
+  add_foreign_key "races", "race_sets"
   add_foreign_key "races", "rounds"
   add_foreign_key "rounds", "tournaments"
   add_foreign_key "rounds", "tracks"
   add_foreign_key "tournaments", "users"
+  add_foreign_key "user_registrations", "rounds"
   add_foreign_key "user_registrations", "tournaments"
   add_foreign_key "user_registrations", "users"
   add_foreign_key "user_scores", "rounds"
